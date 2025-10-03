@@ -6,9 +6,48 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1BB87E0B2E901DFD00E69DDB /* PinryShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BB87E012E901DFD00E69DDB /* PinryShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1BB87E092E901DFD00E69DDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1BB87DE62E901D2000E69DDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1BB87E002E901DFD00E69DDB;
+			remoteInfo = PinryShareExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1BB87E102E901DFD00E69DDB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1BB87E0B2E901DFD00E69DDB /* PinryShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1BB87DEE2E901D2000E69DDB /* pinry-saver-ios-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "pinry-saver-ios-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1BB87E012E901DFD00E69DDB /* PinryShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinryShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1BB87E0C2E901DFD00E69DDB /* Exceptions for "PinryShareExtension" folder in "PinryShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1BB87E002E901DFD00E69DDB /* PinryShareExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1BB87DF02E901D2000E69DDB /* pinry-saver-ios-2 */ = {
@@ -16,10 +55,25 @@
 			path = "pinry-saver-ios-2";
 			sourceTree = "<group>";
 		};
+		1BB87E022E901DFD00E69DDB /* PinryShareExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1BB87E0C2E901DFD00E69DDB /* Exceptions for "PinryShareExtension" folder in "PinryShareExtension" target */,
+			);
+			path = PinryShareExtension;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1BB87DEB2E901D2000E69DDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1BB87DFE2E901DFD00E69DDB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				1BB87DF02E901D2000E69DDB /* pinry-saver-ios-2 */,
+				1BB87E022E901DFD00E69DDB /* PinryShareExtension */,
 				1BB87DEF2E901D2000E69DDB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				1BB87DEE2E901D2000E69DDB /* pinry-saver-ios-2.app */,
+				1BB87E012E901DFD00E69DDB /* PinryShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,10 +111,12 @@
 				1BB87DEA2E901D2000E69DDB /* Sources */,
 				1BB87DEB2E901D2000E69DDB /* Frameworks */,
 				1BB87DEC2E901D2000E69DDB /* Resources */,
+				1BB87E102E901DFD00E69DDB /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1BB87E0A2E901DFD00E69DDB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1BB87DF02E901D2000E69DDB /* pinry-saver-ios-2 */,
@@ -69,6 +127,28 @@
 			productName = "pinry-saver-ios-2";
 			productReference = 1BB87DEE2E901D2000E69DDB /* pinry-saver-ios-2.app */;
 			productType = "com.apple.product-type.application";
+		};
+		1BB87E002E901DFD00E69DDB /* PinryShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1BB87E0D2E901DFD00E69DDB /* Build configuration list for PBXNativeTarget "PinryShareExtension" */;
+			buildPhases = (
+				1BB87DFD2E901DFD00E69DDB /* Sources */,
+				1BB87DFE2E901DFD00E69DDB /* Frameworks */,
+				1BB87DFF2E901DFD00E69DDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1BB87E022E901DFD00E69DDB /* PinryShareExtension */,
+			);
+			name = PinryShareExtension;
+			packageProductDependencies = (
+			);
+			productName = PinryShareExtension;
+			productReference = 1BB87E012E901DFD00E69DDB /* PinryShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +161,9 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					1BB87DED2E901D2000E69DDB = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					1BB87E002E901DFD00E69DDB = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
@@ -100,12 +183,20 @@
 			projectRoot = "";
 			targets = (
 				1BB87DED2E901D2000E69DDB /* pinry-saver-ios-2 */,
+				1BB87E002E901DFD00E69DDB /* PinryShareExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1BB87DEC2E901D2000E69DDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1BB87DFF2E901DFD00E69DDB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +213,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1BB87DFD2E901DFD00E69DDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1BB87E0A2E901DFD00E69DDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1BB87E002E901DFD00E69DDB /* PinryShareExtension */;
+			targetProxy = 1BB87E092E901DFD00E69DDB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1BB87DF72E901D2200E69DDB /* Debug */ = {
@@ -251,6 +357,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "pinry-saver-ios-2/pinry-saver-ios-2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6PB44SHJS5;
@@ -261,20 +368,26 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "whistlehog.pinry-saver-ios-2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.pinrysaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				entitlements = "PinrySaver-Entitlements.entitlements";
 			};
 			name = Debug;
 		};
@@ -283,6 +396,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "pinry-saver-ios-2/pinry-saver-ios-2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6PB44SHJS5;
@@ -293,20 +407,96 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "whistlehog.pinry-saver-ios-2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.pinrysaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				entitlements = "PinrySaver-Entitlements.entitlements";
+			};
+			name = Release;
+		};
+		1BB87E0E2E901DFD00E69DDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PinryShareExtension/PinryShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6PB44SHJS5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PinryShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PinryShareExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.pinrysaver.shareextension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				entitlements = "PinryShareExtension-Entitlements.entitlements";
+			};
+			name = Debug;
+		};
+		1BB87E0F2E901DFD00E69DDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PinryShareExtension/PinryShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6PB44SHJS5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PinryShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PinryShareExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.pinrysaver.shareextension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				entitlements = "PinryShareExtension-Entitlements.entitlements";
 			};
 			name = Release;
 		};
@@ -327,6 +517,15 @@
 			buildConfigurations = (
 				1BB87DFA2E901D2200E69DDB /* Debug */,
 				1BB87DFB2E901D2200E69DDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1BB87E0D2E901DFD00E69DDB /* Build configuration list for PBXNativeTarget "PinryShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1BB87E0E2E901DFD00E69DDB /* Debug */,
+				1BB87E0F2E901DFD00E69DDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
