@@ -1,0 +1,255 @@
+2025-10-04 16:55:53 +0000 [MT] Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0x7fae7869c870; archive(resolved)="<IDEArchive: 0x7fae7863cf60>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team(resolved)="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	Chain (14, self inclusive):
+	<IDEDistributionProcessingPipelineContext: 0x7fae7869c870; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionProcessingPipelineContext: 0x7fae784d8660; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae784d01b0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae786a41c0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae786a3fb0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae783f2c60; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae78693c00; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae786939f0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae783ede60; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="<IDEProvisioningBasicTeam: 0x7fae78673810; teamID='6PB44SHJS5', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fae786794e0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="(null)">
+	<IDEDistributionContext: 0x7fae786783e0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="(null)">
+	<IDEDistributionContext: 0x7fae78677150; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="(null)">
+	<IDEDistributionContext: 0x7fae784950d0; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fae78594170>", team="(null)">
+	<IDEDistributionContext: 0x7fae7863e660; archive = "<IDEArchive: 0x7fae7863cf60>", distributionMethod="(null)", team="(null)">
+</IDEDistributionProcessingPipelineContext: 0x7fae7869c870>
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionCreateDestRootStep
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionCopyItemStep
+2025-10-04 16:55:53 +0000 [MT] Running /usr/bin/ditto '-V' '/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app' '/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app'
+2025-10-04 16:55:53 +0000  >>> Copying /Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app 
+2025-10-04 16:55:53 +0000  copying file ./_CodeSignature/CodeResources ... 
+2025-10-04 16:55:53 +0000  4742 bytes for ./_CodeSignature/CodeResources
+2025-10-04 16:55:53 +0000  copying file ./pinry-saver-ios-2 ... 
+2025-10-04 16:55:53 +0000  126608 bytes for ./pinry-saver-ios-2
+2025-10-04 16:55:53 +0000  copying file ./PlugIns/PinryShareExtension.appex/_CodeSignature/CodeResources ... 
+2025-10-04 16:55:53 +0000  2962 bytes for ./PlugIns/PinryShareExtension.appex/_CodeSignature/CodeResources
+2025-10-04 16:55:53 +0000  copying file ./PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/UIViewController-j1y-V4-xli.nib ... 
+2025-10-04 16:55:53 +0000  976 bytes for ./PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/UIViewController-j1y-V4-xli.nib
+copying file ./PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/j1y-V4-xli-view-wbc-yd-nQP.nib ... 
+2025-10-04 16:55:53 +0000  1192 bytes for ./PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/j1y-V4-xli-view-wbc-yd-nQP.nib
+copying file ./PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/Info.plist ... 
+2025-10-04 16:55:53 +0000  258 bytes for ./PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/Info.plist
+2025-10-04 16:55:53 +0000  copying file ./PlugIns/PinryShareExtension.appex/PinryShareExtension ... 
+2025-10-04 16:55:53 +0000  166368 bytes for ./PlugIns/PinryShareExtension.appex/PinryShareExtension
+copying file ./PlugIns/PinryShareExtension.appex/embedded.mobileprovision ... 
+2025-10-04 16:55:53 +0000  14623 bytes for ./PlugIns/PinryShareExtension.appex/embedded.mobileprovision
+copying file ./PlugIns/PinryShareExtension.appex/Info.plist ... 
+2025-10-04 16:55:53 +0000  1146 bytes for ./PlugIns/PinryShareExtension.appex/Info.plist
+2025-10-04 16:55:53 +0000  copying file ./embedded.mobileprovision ... 
+2025-10-04 16:55:53 +0000  14514 bytes for ./embedded.mobileprovision
+2025-10-04 16:55:53 +0000  copying file ./Info.plist ... 
+2025-10-04 16:55:53 +0000  1263 bytes for ./Info.plist
+2025-10-04 16:55:53 +0000  copying file ./PkgInfo ... 
+2025-10-04 16:55:53 +0000  8 bytes for ./PkgInfo
+2025-10-04 16:55:53 +0000 [MT] /usr/bin/ditto exited with 0
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionEmbedProfileStep
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionInfoPlistStep
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionAppThinningPlistStep
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionAppThinningPlistStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionSymbolsStep
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionSymbolsStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionAppThinningStep
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionAppThinningStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionArchThinningStep
+2025-10-04 16:55:53 +0000 [MT] Archs to thin for item /Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex are []
+2025-10-04 16:55:53 +0000 [MT] Archs to thin for item /Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app are []
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionODRStep
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionStripXattrsStep
+2025-10-04 16:55:53 +0000 [MT] Skipping stripping extended attributes because the codesign step will strip them.
+2025-10-04 16:55:53 +0000 [MT] Skipping stripping extended attributes because the codesign step will strip them.
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionCodesignStep
+2025-10-04 16:55:53 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fae732a53d0; bundleID='com.example.pinrysaver.shareextension', path='<DVTFilePath:0x7fae73297130:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fae785a40d0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae785dea30; name='Apple Development: sciamop@hotmail.com (MSCNL85B68)', hash='F5F3D7AB912279A49247E59C4C9EF98642AA1F42', serialNumber='754833034107C0DA69282E14DC8FF89B', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2025-10-03 01:48:58 +0000''>', entitlements='{
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver.shareextension";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinrysaver.shareextension"
+    );
+}', teamID='6PB44SHJS5', identifier='com.example.pinrysaver.shareextension', executablePath='<DVTFilePath:0x7fae734f5eb0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension'>', hardenedRuntime='0'>'>: {
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver.shareextension";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinrysaver.shareextension"
+    );
+}
+2025-10-04 16:55:53 +0000 [MT] Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2025-10-04 16:55:53 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fae732a53d0; bundleID='com.example.pinrysaver.shareextension', path='<DVTFilePath:0x7fae73297130:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fae785a40d0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae786be8d0; name='Apple Development: sciamop@hotmail.com (MSCNL85B68)', hash='F5F3D7AB912279A49247E59C4C9EF98642AA1F42', serialNumber='754833034107C0DA69282E14DC8FF89B', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2025-10-03 01:48:58 +0000''>', entitlements='{
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver.shareextension";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinrysaver.shareextension"
+    );
+}', teamID='6PB44SHJS5', identifier='com.example.pinrysaver.shareextension', executablePath='<DVTFilePath:0x7fae734f5eb0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension'>', hardenedRuntime='0'>'> are: {
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver.shareextension";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinrysaver.shareextension"
+    );
+}
+2025-10-04 16:55:53 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0x7fae732a53d0; bundleID='com.example.pinrysaver.shareextension', path='<DVTFilePath:0x7fae73297130:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fae785a40d0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae73281b10; name='Apple Development: sciamop@hotmail.com (MSCNL85B68)', hash='F5F3D7AB912279A49247E59C4C9EF98642AA1F42', serialNumber='754833034107C0DA69282E14DC8FF89B', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2025-10-03 01:48:58 +0000''>', entitlements='{
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver.shareextension";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinrysaver.shareextension"
+    );
+}', teamID='6PB44SHJS5', identifier='com.example.pinrysaver.shareextension', executablePath='<DVTFilePath:0x7fae734f5eb0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension'>', hardenedRuntime='0'>'> to: /var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/entitlements~~~rMQdvV
+2025-10-04 16:55:53 +0000 [MT] invoking codesign: <NSConcreteTask: 0x7fae785de2a0; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    F5F3D7AB912279A49247E59C4C9EF98642AA1F42,
+    "--entitlements",
+    "/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/entitlements~~~rMQdvV",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex"
+)'>
+2025-10-04 16:55:53 +0000 [MT] codesign output: /var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex: replacing existing signature
+/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex: signed bundle with Mach-O thin (arm64) [com.example.pinrysaver.shareextension]
+2025-10-04 16:55:53 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fae7a009c40; bundleID='com.example.pinrysaver', path='<DVTFilePath:0x7fae7863dee0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fae7868d340; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae7a2416c0; name='Apple Development: sciamop@hotmail.com (MSCNL85B68)', hash='F5F3D7AB912279A49247E59C4C9EF98642AA1F42', serialNumber='754833034107C0DA69282E14DC8FF89B', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2025-10-03 01:48:58 +0000''>', entitlements='{
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinryshared"
+    );
+}', teamID='6PB44SHJS5', identifier='com.example.pinrysaver', executablePath='<DVTFilePath:0x7fae732956c0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/pinry-saver-ios-2'>', hardenedRuntime='0'>'>: {
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinryshared"
+    );
+}
+2025-10-04 16:55:53 +0000 [MT] Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2025-10-04 16:55:53 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fae7a009c40; bundleID='com.example.pinrysaver', path='<DVTFilePath:0x7fae7863dee0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fae7868d340; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae784dd0a0; name='Apple Development: sciamop@hotmail.com (MSCNL85B68)', hash='F5F3D7AB912279A49247E59C4C9EF98642AA1F42', serialNumber='754833034107C0DA69282E14DC8FF89B', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2025-10-03 01:48:58 +0000''>', entitlements='{
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinryshared"
+    );
+}', teamID='6PB44SHJS5', identifier='com.example.pinrysaver', executablePath='<DVTFilePath:0x7fae732956c0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/pinry-saver-ios-2'>', hardenedRuntime='0'>'> are: {
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinryshared"
+    );
+}
+2025-10-04 16:55:53 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0x7fae7a009c40; bundleID='com.example.pinrysaver', path='<DVTFilePath:0x7fae7863dee0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fae7868d340; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae7a2416c0; name='Apple Development: sciamop@hotmail.com (MSCNL85B68)', hash='F5F3D7AB912279A49247E59C4C9EF98642AA1F42', serialNumber='754833034107C0DA69282E14DC8FF89B', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2025-10-03 01:48:58 +0000''>', entitlements='{
+    "application-identifier" = "6PB44SHJS5.com.example.pinrysaver";
+    "com.apple.developer.team-identifier" = 6PB44SHJS5;
+    "com.apple.security.application-groups" =     (
+        "group.com.example.pinry"
+    );
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "6PB44SHJS5.com.example.pinryshared"
+    );
+}', teamID='6PB44SHJS5', identifier='com.example.pinrysaver', executablePath='<DVTFilePath:0x7fae732956c0:'/Users/toddfaulls/Desktop/pinry-saver-ios-2/pinry-saver-ios-2.xcarchive/Products/Applications/pinry-saver-ios-2.app/pinry-saver-ios-2'>', hardenedRuntime='0'>'> to: /var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/entitlements~~~Fo0mJa
+2025-10-04 16:55:53 +0000 [MT] invoking codesign: <NSConcreteTask: 0x7fae7a245d20; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    F5F3D7AB912279A49247E59C4C9EF98642AA1F42,
+    "--entitlements",
+    "/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/entitlements~~~Fo0mJa",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app"
+)'>
+2025-10-04 16:55:53 +0000 [MT] codesign output: /var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app: replacing existing signature
+/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app: signed app bundle with Mach-O thin (arm64) [com.example.pinrysaver]
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionZipODRItemStep
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionCreateIPAStep
+2025-10-04 16:55:53 +0000 [MT] Running /usr/bin/ditto '-V' '-c' '-k' '--norsrc' '/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root' '/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Packages/pinry-saver-ios-2.ipa'
+2025-10-04 16:55:53 +0000  >>> Copying /var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root 
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/_CodeSignature/CodeResources ... 
+2025-10-04 16:55:53 +0000  4742 bytes for ./Payload/pinry-saver-ios-2.app/_CodeSignature/CodeResources
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/pinry-saver-ios-2 ... 
+2025-10-04 16:55:53 +0000  126608 bytes for ./Payload/pinry-saver-ios-2.app/pinry-saver-ios-2
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/_CodeSignature/CodeResources ... 
+2025-10-04 16:55:53 +0000  2962 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/_CodeSignature/CodeResources
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/UIViewController-j1y-V4-xli.nib ... 
+2025-10-04 16:55:53 +0000  976 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/UIViewController-j1y-V4-xli.nib
+copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/j1y-V4-xli-view-wbc-yd-nQP.nib ... 
+1192 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/j1y-V4-xli-view-wbc-yd-nQP.nib
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/Info.plist ... 
+258 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Base.lproj/MainInterface.storyboardc/Info.plist
+copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension ... 
+2025-10-04 16:55:53 +0000  166368 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/embedded.mobileprovision ... 
+2025-10-04 16:55:53 +0000  14623 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/embedded.mobileprovision
+copying file ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Info.plist ... 
+2025-10-04 16:55:53 +0000  1146 bytes for ./Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/Info.plist
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/embedded.mobileprovision ... 
+2025-10-04 16:55:53 +0000  14514 bytes for ./Payload/pinry-saver-ios-2.app/embedded.mobileprovision
+2025-10-04 16:55:53 +0000  copying file ./Payload/pinry-saver-ios-2.app/Info.plist ... 
+1263 bytes for ./Payload/pinry-saver-ios-2.app/Info.plist
+copying file ./Payload/pinry-saver-ios-2.app/PkgInfo ... 
+2025-10-04 16:55:53 +0000  8 bytes for ./Payload/pinry-saver-ios-2.app/PkgInfo
+2025-10-04 16:55:53 +0000 [MT] /usr/bin/ditto exited with 0
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionAppStoreInformationStep
+2025-10-04 16:55:53 +0000 [MT] Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionGenerateProcessedDistributionItems
+2025-10-04 16:55:53 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x7fae7a23cf00:'/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex'>
+2025-10-04 16:55:53 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x7fae7a249970:'/var/folders/qt/w8krfch522l75hwc4_9m8m800000gn/T/XcodeDistPipeline.~~~B26EC7/Root/Payload/pinry-saver-ios-2.app'>
+2025-10-04 16:55:53 +0000 [MT] Processing step: IDEDistributionCreateManifestStep

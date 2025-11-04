@@ -79,9 +79,8 @@ class PinryUploader {
             return PinryUploadResult(success: false, message: "API Token is not configured")
         }
         
-        guard !defaultBoardID.isEmpty else {
-            return PinryUploadResult(success: false, message: "Default Board ID is not configured")
-        }
+        // Board ID is optional - can be empty or "0"
+        let boardIDToUse = defaultBoardID.isEmpty ? "0" : defaultBoardID
         
         // Build URL - using v2 API like the JavaScript client
         guard let url = URL(string: "\(baseURL)/api/v2/pins/") else {
@@ -99,7 +98,7 @@ class PinryUploader {
                     imageData: processedImageData,
                     description: pin.description,
                     source: pin.source,
-                    boardID: pin.boardID.isEmpty ? defaultBoardID : pin.boardID
+                    boardID: boardIDToUse
                 )
             } else if let urlString = pin.url {
                 // URL-based pin
@@ -109,7 +108,7 @@ class PinryUploader {
                     pinUrl: urlString,
                     description: pin.description,
                     source: pin.source,
-                    boardID: pin.boardID.isEmpty ? defaultBoardID : pin.boardID
+                    boardID: boardIDToUse
                 )
             } else {
                 return PinryUploadResult(success: false, message: "Pin must have either image data or URL")
