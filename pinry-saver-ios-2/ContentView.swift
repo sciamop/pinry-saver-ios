@@ -50,94 +50,94 @@ struct ImageGalleryView: View {
     @State private var isLoading = false
     @State private var hasMore = true
     @State private var errorMessage: String?
-    
-    // Columns for adaptive grid
-    let columns = [
-        GridItem(.adaptive(minimum: 150, maximum: 250), spacing: 12)
-    ]
+    @State private var scrollToTop = false
     
     var body: some View {
-        ZStack {
-            Color(uiColor: .systemBackground).ignoresSafeArea()
-            
+        ZStack(alignment: .top) {
+            // Full screen scroll view
             ScrollViewReader { scrollProxy in
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        // Top anchor for scroll to top
-                        Color.clear
-                            .frame(height: 0)
-                            .id("top")
-                        
-                        ForEach(pins) { pin in
-                            PinThumbnailView(pin: pin)
-                                .onAppear {
-                                    // Load more when near the end
-                                    if pin.id == pins.last?.id && hasMore && !isLoading {
-                                        loadMorePins()
-                                    }
-                                }
-                        }
-                        
-                        // Loading indicator
-                        if isLoading {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                        }
-                        
-                        // Error message
-                        if let error = errorMessage {
-                            Text(error)
-                                .foregroundColor(.red)
-                                .font(.system(size: 14))
-                                .padding()
-                                .multilineTextAlignment(.center)
-                        }
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.top, 60)
-                    .padding(.bottom, 20)
-                }
-                
-                // Floating UI elements
-                VStack {
-                    HStack {
-                        // Pinry Logo (upper left) - scroll to top
-                        Button(action: {
-                            withAnimation {
-                                scrollProxy.scrollTo("top", anchor: .top)
-                            }
-                        }) {
-                            PinryLogo()
-                                .frame(width: 44, height: 44)
-                                .background(Color(uiColor: .systemBackground))
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                        }
-                        .padding(.leading, 16)
-                        .padding(.top, 16)
-                        
-                        Spacer()
-                        
-                        // Gear icon (upper right) - show settings
-                        Button(action: {
-                            showingSettings = true
-                        }) {
-                            Image(systemName: "gear")
-                                .font(.system(size: 20))
-                                .foregroundColor(.primary)
-                                .frame(width: 44, height: 44)
-                                .background(Color(uiColor: .systemBackground))
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                        }
-                        .padding(.trailing, 16)
-                        .padding(.top, 16)
-                    }
+                GeometryReader { geometry in
+                    let isLandscape = geometry.size.width > geometry.size.height
+                    let columns = isLandscape ? 6 : 3
                     
-                    Spacer()
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            // Top anchor for scroll to top
+                            Color.clear
+                                .frame(height: 0)
+                                .id("top")
+                            
+                            // Spacer for floating buttons
+                            Color.clear
+                                .frame(height: 60)
+                            
+                            // Masonry Grid - responsive to orientation
+                            MasonryGrid(pins: pins, spacing: 12, columns: columns) { pin in
+                                PinThumbnailView(pin: pin)
+                                    .onAppear {
+                                        // Load more when near the end
+                                        if pin.id == pins.last?.id && hasMore && !isLoading {
+                                            loadMorePins()
+                                        }
+                                    }
+                            }
+                            .padding(.horizontal, 12)
+                        
+                            // Loading indicator
+                            if isLoading {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            }
+                            
+                            // Error message
+                            if let error = errorMessage {
+                                Text(error)
+                                    .foregroundColor(.red)
+                                    .font(.system(size: 14))
+                                    .padding()
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .padding(.bottom, 20)
+                    }
+                    .ignoresSafeArea()
+                    .onChange(of: scrollToTop) { _, _ in
+                        withAnimation {
+                            scrollProxy.scrollTo("top", anchor: .top)
+                        }
+                    }
                 }
             }
+            
+            // Floating UI elements - fixed at top of screen
+            HStack {
+                // Pinry Logo (upper left) - scroll to top - no background
+                Button(action: {
+                    scrollToTop.toggle()
+                }) {
+                    PinryLogo()
+                        .frame(width: 44, height: 44)
+                        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 2)
+                }
+                
+                Spacer()
+                
+                // Gear icon (upper right) - show settings
+                Button(action: {
+                    showingSettings = true
+                }) {
+                    Image(systemName: "gear")
+                        .font(.system(size: 20))
+                        .foregroundColor(.primary)
+                        .padding(2)
+                        .background(Color(uiColor: .systemBackground).opacity(0.95))
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 2)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
         }
         .onAppear {
             if pins.isEmpty {
@@ -190,6 +190,36 @@ struct ImageGalleryView: View {
     }
 }
 
+// MARK: - Masonry Grid Layout
+struct MasonryGrid<Content: View, T: Identifiable>: View {
+    let pins: [T]
+    let spacing: CGFloat
+    let columns: Int
+    let content: (T) -> Content
+    
+    init(pins: [T], spacing: CGFloat = 12, columns: Int = 2, @ViewBuilder content: @escaping (T) -> Content) {
+        self.pins = pins
+        self.spacing = spacing
+        self.columns = columns
+        self.content = content
+    }
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: spacing) {
+            ForEach(0..<columns, id: \.self) { columnIndex in
+                LazyVStack(spacing: spacing) {
+                    ForEach(Array(pins.enumerated()), id: \.element.id) { index, pin in
+                        if index % columns == columnIndex {
+                            content(pin)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+    }
+}
+
 // MARK: - Pin Thumbnail View
 struct PinThumbnailView: View {
     let pin: PinryPinDetail
@@ -209,9 +239,7 @@ struct PinThumbnailView: View {
                     case .success(let image):
                         image
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(minWidth: 0, maxWidth: .infinity)
-                            .clipped()
+                            .aspectRatio(contentMode: .fit)
                     case .failure:
                         Rectangle()
                             .fill(Color.gray.opacity(0.2))

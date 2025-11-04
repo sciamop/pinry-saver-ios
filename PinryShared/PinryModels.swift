@@ -16,7 +16,7 @@ struct PinryPinsResponse: Codable {
 
 struct PinryPinDetail: Codable, Identifiable {
     let id: Int
-    let url: String
+    let url: String?
     let description: String?
     let image: PinryImage
     let submitter: PinrySubmitter?
