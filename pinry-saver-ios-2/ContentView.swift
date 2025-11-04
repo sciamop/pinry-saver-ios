@@ -5,6 +5,11 @@
 
 import SwiftUI
 
+// Custom color extension for Pinry magenta
+extension Color {
+    static let pinryMagenta = Color(red: 1.0, green: 0.26, blue: 1.0) // #FF42FF
+}
+
 struct SettingsView: View {
     @State private var pinryBaseURL: String = ""
     @State private var apiToken: String = ""
@@ -13,62 +18,84 @@ struct SettingsView: View {
     @State private var alertMessage = ""
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Pinry Configuration")) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Base URL")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        TextField("https://your-pinry-instance.com", text: $pinryBaseURL)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .keyboardType(.URL)
-                    }
+        ZStack {
+            Color.white.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Logo at top
+                    PinryLogo()
+                        .frame(width: 80, height: 80)
+                        .padding(.top, 60)
+                        .padding(.bottom, 40)
                     
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("API Token")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        SecureField("Enter your API token", text: $apiToken)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
+                    // Input fields container
+                    VStack(spacing: 24) {
+                        // Pinry Server URL
+                        CustomInputField(
+                            label: "Pinry Server URL:",
+                            placeholder: "https://pinry.whistlehog.com",
+                            text: $pinryBaseURL,
+                            isSecure: false,
+                            keyboardType: .URL
+                        )
+                        
+                        // API Key
+                        CustomInputField(
+                            label: "API Key:",
+                            placeholder: "",
+                            text: $apiToken,
+                            isSecure: true
+                        )
+                        
+                        // Default Board ID
+                        CustomInputField(
+                            label: "Default Board ID (optional):",
+                            placeholder: "Leave empty to use default",
+                            text: $defaultBoardID,
+                            isSecure: false,
+                            keyboardType: .numberPad
+                        )
                     }
+                    .padding(.horizontal, 40)
                     
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Default Board ID")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        TextField("Board ID (optional)", text: $defaultBoardID)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .keyboardType(.numberPad)
-                    }
-                }
-                
-                Section {
+                    // Save Settings Button
                     Button(action: saveSettings) {
-                        HStack {
-                            Spacer()
-                            Text("Save Settings")
-                                .fontWeight(.semibold)
-                            Spacer()
-                        }
+                        Text("Save Settings")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                pinryBaseURL.isEmpty || apiToken.isEmpty 
+                                    ? Color.gray.opacity(0.3)
+                                    : Color.pinryMagenta
+                            )
+                            .cornerRadius(28)
                     }
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(8)
                     .disabled(pinryBaseURL.isEmpty || apiToken.isEmpty)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 32)
+                    
+                    Spacer(minLength: 20)
+                    
+                    // GitHub link at bottom
+                    Divider()
+                        .padding(.horizontal, 40)
+                        .padding(.top, 30)
+                    
+                    Link(destination: URL(string: "https://github.com/pinry/pinry")!) {
+                        Text("View on GitHub")
+                            .font(.system(size: 15))
+                            .foregroundColor(Color(red: 0.4, green: 0.4, blue: 0.4))
+                    }
+                    .padding(.top, 16)
+                    .padding(.bottom, 30)
                 }
             }
-            .navigationTitle("Pinry Settings")
-            .onAppear {
-                loadSettings()
-            }
+        }
+        .onAppear {
+            loadSettings()
         }
         .alert("Settings", isPresented: $showingAlert) {
             Button("OK") { }
@@ -109,6 +136,61 @@ struct SettingsView: View {
     private func showAlert(_ message: String) {
         alertMessage = message
         showingAlert = true
+    }
+}
+
+// Custom Input Field Component
+struct CustomInputField: View {
+    let label: String
+    let placeholder: String
+    @Binding var text: String
+    let isSecure: Bool
+    var keyboardType: UIKeyboardType = .default
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(label)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
+            
+            if isSecure {
+                SecureField(placeholder, text: $text)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+            } else {
+                TextField(placeholder, text: $text)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .keyboardType(keyboardType)
+            }
+        }
+    }
+}
+
+// Custom TextField Style
+struct CustomTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Color(red: 0.96, green: 0.96, blue: 0.96))
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(red: 0.85, green: 0.85, blue: 0.85), lineWidth: 1)
+            )
+            .font(.system(size: 15))
+    }
+}
+
+// Pinry Logo Component - Uses PNG asset
+struct PinryLogo: View {
+    var body: some View {
+        Image("PinryIcon")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
     }
 }
 

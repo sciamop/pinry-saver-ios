@@ -20,11 +20,12 @@ class ShareViewController: UIViewController {
     // MARK: - UI Setup
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .white
         
-        // Create activity indicator
+        // Create activity indicator with magenta color
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0) // Pinry magenta
         activityIndicator.startAnimating()
         
         // Create label
@@ -32,7 +33,8 @@ class ShareViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Uploading to Pinry..."
         label.textAlignment = .center
-        label.font = .preferredFont(forTextStyle: .headline)
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
+        label.textColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0)
         
         view.addSubview(activityIndicator)
         view.addSubview(label)

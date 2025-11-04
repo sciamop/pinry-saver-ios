@@ -4,6 +4,7 @@ A SwiftUI iOS app with share extension for saving images and URLs to Pinry insta
 
 ## Features
 
+- **Modern UI**: Clean, minimalist design with vibrant magenta branding and striped logo
 - **Main App**: Settings screen to configure Pinry Base URL, API Token, and Default Board ID
 - **Share Extension**: Appears in iOS share sheets for images (`public.image`) and URLs (`public.url`)
 - **Secure Storage**: API token stored in shared Keychain between app and extension
