@@ -9,6 +9,10 @@ class ShareViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Invalidate cache to force fresh load from UserDefaults
+        // This ensures we get the latest settings from the main app
+        PinrySettings.invalidateCache()
+        
         // Preload settings on background thread to warm the cache
         // This prevents the first access from blocking
         DispatchQueue.global(qos: .userInitiated).async {
@@ -232,7 +236,7 @@ class ShareViewController: UIViewController {
                     return
                 }
                 
-                provider.loadDataRepresentation(forTypeIdentifier: imageTypes[index]) { data, error in
+                provider.loadDataRepresentation(forTypeIdentifier: imageTypes[index]) { [weak self] data, error in
                     if let error = error {
                         NSLog("⚠️ Failed to load \(imageTypes[index]): \(error)")
                         tryNextImageType(index: index + 1)
@@ -240,13 +244,13 @@ class ShareViewController: UIViewController {
                         NSLog("✅ Successfully loaded image: \(imageData.count) bytes using type \(imageTypes[index])")
                         
                         // Store the first image for thumbnail display
-                        if self.sharedImageData == nil {
-                            self.sharedImageData = imageData
+                        if self?.sharedImageData == nil {
+                            self?.sharedImageData = imageData
                         }
                         
                         // Generate description from context
-                        let description = self.generateImageDescription(from: provider)
-                        let source = self.extractSource(from: provider) ?? "iOS Share"
+                        let description = self?.generateImageDescription(from: provider) ?? "Shared image"
+                        let source = self?.extractSource(from: provider) ?? "iOS Share"
                         
                         let pin = PinryPin(
                             imageData: imageData,
