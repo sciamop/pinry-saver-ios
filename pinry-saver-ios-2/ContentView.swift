@@ -19,7 +19,7 @@ struct SettingsView: View {
     
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+            Color(uiColor: .systemBackground).ignoresSafeArea()
             
             ScrollView {
                 VStack(spacing: 0) {
@@ -87,7 +87,7 @@ struct SettingsView: View {
                     Link(destination: URL(string: "https://github.com/pinry/pinry")!) {
                         Text("View on GitHub")
                             .font(.system(size: 15))
-                            .foregroundColor(Color(red: 0.4, green: 0.4, blue: 0.4))
+                            .foregroundColor(Color(uiColor: .secondaryLabel))
                     }
                     .padding(.top, 16)
                     .padding(.bottom, 30)
@@ -129,6 +129,7 @@ struct SettingsView: View {
         
         NSLog("SettingsView: Attempting to save API token as plaintext, length: \(settings.apiToken.count)")
         PinrySettings.save(settings)
+        PinrySettings.invalidateCache() // Ensure share extension gets fresh data
         NSLog("SettingsView: All settings saved to UserDefaults successfully")
         showAlert("Settings saved successfully!")
     }
@@ -151,7 +152,7 @@ struct CustomInputField: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
                 .font(.system(size: 15, weight: .regular))
-                .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
+                .foregroundColor(Color(uiColor: .secondaryLabel))
             
             if isSecure {
                 SecureField(placeholder, text: $text)
@@ -175,11 +176,11 @@ struct CustomTextFieldStyle: TextFieldStyle {
         configuration
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(Color(red: 0.96, green: 0.96, blue: 0.96))
+            .background(Color(uiColor: .secondarySystemBackground))
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(red: 0.85, green: 0.85, blue: 0.85), lineWidth: 1)
+                    .stroke(Color(uiColor: .separator), lineWidth: 1)
             )
             .font(.system(size: 15))
     }

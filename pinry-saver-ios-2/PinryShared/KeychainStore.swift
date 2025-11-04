@@ -20,7 +20,7 @@ class KeychainStore {
         guard let data = token.data(using: .utf8) else { return false }
         
         // Delete existing item if it exists
-        deleteAPIToken()
+        _ = deleteAPIToken()
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,

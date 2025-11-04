@@ -4,23 +4,36 @@ import UniformTypeIdentifiers
 class ShareViewController: UIViewController {
     
     private var uploadTask: Task<Void, Never>?
+    private var sharedImageData: Data?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set up UI
+        // Preload settings on background thread to warm the cache
+        // This prevents the first access from blocking
+        DispatchQueue.global(qos: .userInitiated).async {
+            _ = PinrySettings.load()
+        }
+        
+        // Set up UI immediately on load
         setupUI()
+        
+        // Start processing items as soon as possible (don't wait for viewDidAppear)
+        // This reduces the perceived delay
+        DispatchQueue.main.async {
+            self.handleSharedItems()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        handleSharedItems()
+        // Items are already being handled from viewDidLoad
     }
     
     // MARK: - UI Setup
     
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         // Create activity indicator with magenta color
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -28,25 +41,52 @@ class ShareViewController: UIViewController {
         activityIndicator.color = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0) // Pinry magenta
         activityIndicator.startAnimating()
         
-        // Create label
+        // Create main label
         let label = UILabel()
+        label.tag = 100 // Tag for updating later
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Uploading to Pinry..."
+        label.text = "Preparing to share..."
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 17, weight: .semibold)
-        label.textColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0)
+        label.textColor = .label
+        
+        // Create subtitle label showing destination (load settings async)
+        let subtitleLabel = UILabel()
+        subtitleLabel.tag = 101
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.text = "Loading..."
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        subtitleLabel.textColor = .secondaryLabel
         
         view.addSubview(activityIndicator)
         view.addSubview(label)
+        view.addSubview(subtitleLabel)
         
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30),
             
             label.topAnchor.constraint(equalTo: activityIndicator.bottomAnchor, constant: 20),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
+            subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+        
+        // Load settings asynchronously to avoid blocking
+        DispatchQueue.global(qos: .userInitiated).async {
+            let settings = PinrySettings.load()
+            let serverHost = URL(string: settings.pinryBaseURL)?.host ?? "Pinry"
+            
+            DispatchQueue.main.async {
+                if let subtitle = self.view.viewWithTag(101) as? UILabel {
+                    subtitle.text = "Sharing to \(serverHost)"
+                }
+            }
+        }
     }
     
     // MARK: - Share Handling
@@ -59,20 +99,25 @@ class ShareViewController: UIViewController {
         
         let providers = items.flatMap { $0.attachments ?? [] }
         
+        // Update UI to show we're processing
+        if let label = view.viewWithTag(100) as? UILabel {
+            label.text = "Processing items..."
+        }
+        
         uploadTask = Task {
             do {
                 let result = try await processSharedItems(providers)
                 
                 await MainActor.run {
                     if result.success {
-                        dismissWithSuccess(result.message)
+                        self.dismissWithSuccess(result.message)
                     } else {
-                        dismissWithError(result.message)
+                        self.dismissWithError(result.message)
                     }
                 }
             } catch {
                 await MainActor.run {
-                    dismissWithError("Error: \(error.localizedDescription)")
+                    self.dismissWithError("Error: \(error.localizedDescription)")
                 }
             }
         }
@@ -139,6 +184,13 @@ class ShareViewController: UIViewController {
         let uploader = PinryUploader.shared
         var results: [PinryUploadResult] = []
         
+        // Update UI to show we're uploading
+        await MainActor.run {
+            if let label = self.view.viewWithTag(100) as? UILabel {
+                label.text = pins.count > 1 ? "Uploading \(pins.count) items..." : "Uploading to Pinry..."
+            }
+        }
+        
         for pin in pins {
             let result = await uploader.upload(pin)
             results.append(result)
@@ -186,6 +238,11 @@ class ShareViewController: UIViewController {
                         tryNextImageType(index: index + 1)
                     } else if let imageData = data {
                         NSLog("✅ Successfully loaded image: \(imageData.count) bytes using type \(imageTypes[index])")
+                        
+                        // Store the first image for thumbnail display
+                        if self.sharedImageData == nil {
+                            self.sharedImageData = imageData
+                        }
                         
                         // Generate description from context
                         let description = self.generateImageDescription(from: provider)
@@ -353,29 +410,106 @@ class ShareViewController: UIViewController {
     // MARK: - Dismissal
     
     private func dismissWithSuccess(_ message: String) {
-        showAlert(message: message, isError: false) {
+        showCustomAlert(message: message, isError: false) {
             self.complete()
         }
     }
     
     private func dismissWithError(_ message: String) {
-        showAlert(message: message, isError: true) {
+        showCustomAlert(message: message, isError: true) {
             self.cancel(message)
         }
     }
     
-    private func showAlert(message: String, isError: Bool, completion: @escaping () -> Void) {
-        let alert = UIAlertController(
-            title: isError ? "Error" : "Success",
-            message: message,
-            preferredStyle: .alert
-        )
+    private func showCustomAlert(message: String, isError: Bool, completion: @escaping () -> Void) {
+        // Remove loading UI
+        view.subviews.forEach { $0.removeFromSuperview() }
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+        // Create custom modal container
+        let modalView = UIView()
+        modalView.backgroundColor = .secondarySystemBackground
+        modalView.layer.cornerRadius = 16
+        modalView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Container for content
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Thumbnail (if available)
+        if let imageData = sharedImageData, let image = UIImage(data: imageData) {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFill
+            imageView.clipsToBounds = true
+            imageView.layer.cornerRadius = 8
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.addArrangedSubview(imageView)
+            
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 80),
+                imageView.heightAnchor.constraint(equalToConstant: 80)
+            ])
+        }
+        
+        // Status icon
+        let statusLabel = UILabel()
+        statusLabel.text = isError ? "❌" : "✓"
+        statusLabel.font = .systemFont(ofSize: isError ? 32 : 44, weight: .regular)
+        statusLabel.textColor = isError ? .systemRed : UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
+        stackView.addArrangedSubview(statusLabel)
+        
+        // Message
+        let messageLabel = UILabel()
+        messageLabel.text = message
+        messageLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        messageLabel.textColor = .secondaryLabel
+        messageLabel.textAlignment = .center
+        messageLabel.numberOfLines = 0
+        stackView.addArrangedSubview(messageLabel)
+        
+        // OK Button
+        let button = UIButton(type: .system)
+        button.setTitle("OK", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
+        button.layer.cornerRadius = 28
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addAction(UIAction { _ in
             completion()
-        })
+        }, for: .touchUpInside)
         
-        present(alert, animated: true)
+        modalView.addSubview(stackView)
+        modalView.addSubview(button)
+        view.addSubview(modalView)
+        
+        NSLayoutConstraint.activate([
+            modalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            modalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            modalView.widthAnchor.constraint(equalToConstant: 280),
+            
+            stackView.topAnchor.constraint(equalTo: modalView.topAnchor, constant: 24),
+            stackView.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 24),
+            stackView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -24),
+            
+            button.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
+            button.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 24),
+            button.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -24),
+            button.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -24),
+            button.heightAnchor.constraint(equalToConstant: 56)
+        ])
+        
+        // Animate in
+        modalView.alpha = 0
+        modalView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5) {
+            modalView.alpha = 1
+            modalView.transform = .identity
+        }
     }
     
     private func complete() {
