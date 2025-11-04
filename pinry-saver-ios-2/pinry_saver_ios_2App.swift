@@ -11,7 +11,7 @@ import SwiftUI
 struct pinry_saver_ios_2App: App {
     var body: some Scene {
         WindowGroup {
-            SettingsView()
+            ContentView()
         }
     }
 }

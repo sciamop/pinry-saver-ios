@@ -13,6 +13,10 @@
 		1BAB9AC22EBA5854009B5162 /* PinrySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9ABC2EBA582F009B5162 /* PinrySettings.swift */; };
 		1BAB9AC32EBA5854009B5162 /* PinryUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9ABD2EBA582F009B5162 /* PinryUploader.swift */; };
 		1BAB9AC42EBA5854009B5162 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9ABB2EBA582F009B5162 /* KeychainStore.swift */; };
+		1BAB9AC52EBA5900009B5162 /* PinryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9AC72EBA58FF009B5162 /* PinryModels.swift */; };
+		1BAB9AC62EBA5900009B5162 /* PinryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9AC82EBA58FF009B5162 /* PinryFetcher.swift */; };
+		1BAB9AC92EBA5901009B5162 /* PinryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9AC72EBA58FF009B5162 /* PinryModels.swift */; };
+		1BAB9ACA2EBA5901009B5162 /* PinryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB9AC82EBA58FF009B5162 /* PinryFetcher.swift */; };
 		1BB87E0B2E901DFD00E69DDB /* PinryShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BB87E012E901DFD00E69DDB /* PinryShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -44,6 +48,8 @@
 		1BAB9ABB2EBA582F009B5162 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		1BAB9ABC2EBA582F009B5162 /* PinrySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinrySettings.swift; sourceTree = "<group>"; };
 		1BAB9ABD2EBA582F009B5162 /* PinryUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinryUploader.swift; sourceTree = "<group>"; };
+		1BAB9AC72EBA58FF009B5162 /* PinryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinryModels.swift; sourceTree = "<group>"; };
+		1BAB9AC82EBA58FF009B5162 /* PinryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinryFetcher.swift; sourceTree = "<group>"; };
 		1BB87DEE2E901D2000E69DDB /* pinry-saver-ios-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "pinry-saver-ios-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB87E012E901DFD00E69DDB /* PinryShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinryShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -98,6 +104,8 @@
 				1BAB9ABB2EBA582F009B5162 /* KeychainStore.swift */,
 				1BAB9ABC2EBA582F009B5162 /* PinrySettings.swift */,
 				1BAB9ABD2EBA582F009B5162 /* PinryUploader.swift */,
+				1BAB9AC72EBA58FF009B5162 /* PinryModels.swift */,
+				1BAB9AC82EBA58FF009B5162 /* PinryFetcher.swift */,
 			);
 			path = PinryShared;
 			sourceTree = "<group>";
@@ -233,6 +241,8 @@
 				1BAB9AC22EBA5854009B5162 /* PinrySettings.swift in Sources */,
 				1BAB9AC32EBA5854009B5162 /* PinryUploader.swift in Sources */,
 				1BAB9AC42EBA5854009B5162 /* KeychainStore.swift in Sources */,
+				1BAB9AC92EBA5901009B5162 /* PinryModels.swift in Sources */,
+				1BAB9ACA2EBA5901009B5162 /* PinryFetcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +253,8 @@
 				1BAB9ABF2EBA582F009B5162 /* PinrySettings.swift in Sources */,
 				1BAB9AC02EBA582F009B5162 /* KeychainStore.swift in Sources */,
 				1BAB9AC12EBA582F009B5162 /* PinryUploader.swift in Sources */,
+				1BAB9AC52EBA5900009B5162 /* PinryModels.swift in Sources */,
+				1BAB9AC62EBA5900009B5162 /* PinryFetcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
