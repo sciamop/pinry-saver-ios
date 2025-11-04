@@ -5,27 +5,22 @@ class ShareViewController: UIViewController {
     
     private var uploadTask: Task<Void, Never>?
     private var sharedImageData: Data?
+    private var thumbnailImageView: UIImageView?
+    private var statusLabel: UILabel?
+    private var messageLabel: UILabel?
+    private var activityIndicator: UIActivityIndicatorView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Invalidate cache to force fresh load from UserDefaults
-        // This ensures we get the latest settings from the main app
         PinrySettings.invalidateCache()
         
-        // Preload settings on background thread to warm the cache
-        // This prevents the first access from blocking
         DispatchQueue.global(qos: .userInitiated).async {
             _ = PinrySettings.load()
         }
         
-        // Set up UI immediately on load
-        setupUI()
-        
-        // Start processing items as soon as possible (don't wait for viewDidAppear)
-        // This reduces the perceived delay
         DispatchQueue.main.async {
-            self.handleSharedItems()
+            self.extractImageDataAndStart()
         }
     }
     
@@ -34,62 +29,213 @@ class ShareViewController: UIViewController {
         // Items are already being handled from viewDidLoad
     }
     
+    // MARK: - Image Extraction
+    
+    private func extractImageDataAndStart() {
+        guard let items = extensionContext?.inputItems as? [NSExtensionItem] else {
+            setupUI()
+            updateUIForError("No shared items found")
+            return
+        }
+        
+        let providers = items.flatMap { $0.attachments ?? [] }
+        
+        for provider in providers {
+            // Check for direct image first
+            if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) ||
+               provider.hasItemConformingToTypeIdentifier("public.image") ||
+               provider.hasItemConformingToTypeIdentifier("public.jpeg") ||
+               provider.hasItemConformingToTypeIdentifier("public.png") {
+                loadImageDataForThumbnail(from: provider)
+                return
+            }
+            
+            // Check for URL - might be a direct image URL
+            if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+                loadURLAndCheckForImage(from: provider)
+                return
+            }
+        }
+        
+        // No image or URL found
+        setupUI()
+        handleSharedItems()
+    }
+    
+    private func loadImageDataForThumbnail(from provider: NSItemProvider) {
+        let typeToUse = provider.registeredTypeIdentifiers.first(where: { identifier in
+            identifier.contains("image") || identifier.contains("jpeg") || identifier.contains("png")
+        }) ?? UTType.image.identifier
+        
+        provider.loadDataRepresentation(forTypeIdentifier: typeToUse) { [weak self] data, error in
+            DispatchQueue.main.async {
+                if let imageData = data, let image = UIImage(data: imageData) {
+                    self?.sharedImageData = imageData
+                    self?.setupUI()
+                    self?.updateThumbnail(with: image)
+                } else {
+                    self?.setupUI()
+                }
+                self?.handleSharedItems()
+            }
+        }
+    }
+    
+    private func loadURLAndCheckForImage(from provider: NSItemProvider) {
+        provider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { [weak self] obj, error in
+            var finalURL: URL? = nil
+            if let url = obj as? URL {
+                finalURL = url
+            } else if let string = obj as? String {
+                finalURL = URL(string: string.trimmingCharacters(in: .whitespacesAndNewlines))
+            }
+            
+            guard let url = finalURL else {
+                DispatchQueue.main.async {
+                    self?.setupUI()
+                    self?.handleSharedItems()
+                }
+                return
+            }
+            
+            // Check if it's a direct image URL
+            let path = url.path.lowercased()
+            let isDirectImage = path.hasSuffix(".jpg") || path.hasSuffix(".jpeg") || 
+                               path.hasSuffix(".png") || path.hasSuffix(".gif") || 
+                               path.hasSuffix(".webp") || path.hasSuffix(".heic")
+            
+            if isDirectImage {
+                self?.downloadImageForThumbnail(from: url)
+            } else {
+                DispatchQueue.main.async {
+                    self?.setupUI()
+                    self?.handleSharedItems()
+                }
+            }
+        }
+    }
+    
+    private func downloadImageForThumbnail(from url: URL) {
+        Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(from: url)
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200,
+                      let image = UIImage(data: data) else {
+                    await MainActor.run {
+                        self.setupUI()
+                        self.handleSharedItems()
+                    }
+                    return
+                }
+                
+                await MainActor.run {
+                    self.sharedImageData = data
+                    self.setupUI()
+                    self.updateThumbnail(with: image)
+                    self.handleSharedItems()
+                }
+            } catch {
+                await MainActor.run {
+                    self.setupUI()
+                    self.handleSharedItems()
+                }
+            }
+        }
+    }
+    
     // MARK: - UI Setup
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
-        // Create activity indicator with magenta color
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.color = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0) // Pinry magenta
-        activityIndicator.startAnimating()
+        // Stack view for all content (no nested cards - just centered stack)
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 24
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Create main label
-        let label = UILabel()
-        label.tag = 100 // Tag for updating later
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Preparing to share..."
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17, weight: .semibold)
-        label.textColor = .label
+        // Always create thumbnail placeholder/container
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 16
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Create subtitle label showing destination (load settings async)
-        let subtitleLabel = UILabel()
-        subtitleLabel.tag = 101
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = "Loading..."
-        subtitleLabel.textAlignment = .center
-        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        subtitleLabel.textColor = .secondaryLabel
+        // If we have image data, use it; otherwise show Pinry icon placeholder
+        if let imageData = sharedImageData, let image = UIImage(data: imageData) {
+            imageView.image = image
+            imageView.backgroundColor = .clear
+            imageView.layer.borderWidth = 0
+        } else {
+            imageView.backgroundColor = .secondarySystemBackground
+            imageView.layer.borderWidth = 0
+            
+            // Show Pinry P icon for URL/non-image shares
+            if let pinryIcon = UIImage(named: "PinryIcon") {
+                imageView.image = pinryIcon
+                imageView.contentMode = .scaleAspectFit
+            } else {
+                let iconConfig = UIImage.SymbolConfiguration(pointSize: 60, weight: .regular)
+                let fallbackImage = UIImage(systemName: "link.circle", withConfiguration: iconConfig)
+                imageView.image = fallbackImage
+                imageView.tintColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
+            }
+            imageView.contentMode = .center
+        }
         
-        view.addSubview(activityIndicator)
-        view.addSubview(label)
-        view.addSubview(subtitleLabel)
+        stackView.addArrangedSubview(imageView)
+        thumbnailImageView = imageView
         
         NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30),
-            
-            label.topAnchor.constraint(equalTo: activityIndicator.bottomAnchor, constant: 20),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            subtitleLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
-            subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            imageView.widthAnchor.constraint(equalToConstant: 200),
+            imageView.heightAnchor.constraint(equalToConstant: 200)
         ])
         
-        // Load settings asynchronously to avoid blocking
-        DispatchQueue.global(qos: .userInitiated).async {
-            let settings = PinrySettings.load()
-            let serverHost = URL(string: settings.pinryBaseURL)?.host ?? "Pinry"
-            
-            DispatchQueue.main.async {
-                if let subtitle = self.view.viewWithTag(101) as? UILabel {
-                    subtitle.text = "Sharing to \(serverHost)"
-                }
-            }
+        // Activity indicator
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.color = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
+        spinner.startAnimating()
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addArrangedSubview(spinner)
+        activityIndicator = spinner
+        
+        // Status label (initially empty, will show checkmark/X on completion)
+        let status = UILabel()
+        status.text = ""
+        status.font = .systemFont(ofSize: 56, weight: .regular)
+        status.textAlignment = .center
+        status.alpha = 0 // Hidden initially
+        stackView.addArrangedSubview(status)
+        statusLabel = status
+        
+        // Message label
+        let message = UILabel()
+        message.text = "Uploading to Pinry..."
+        message.font = .systemFont(ofSize: 17, weight: .semibold)
+        message.textColor = .label
+        message.textAlignment = .center
+        message.numberOfLines = 0
+        stackView.addArrangedSubview(message)
+        messageLabel = message
+        
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 40),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -40)
+        ])
+        
+        // Animate in
+        stackView.alpha = 0
+        stackView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
+            stackView.alpha = 1
+            stackView.transform = .identity
         }
     }
     
@@ -97,16 +243,11 @@ class ShareViewController: UIViewController {
     
     private func handleSharedItems() {
         guard let items = extensionContext?.inputItems as? [NSExtensionItem] else {
-            dismissWithError("No shared items found")
+            updateUIForError("No shared items found")
             return
         }
         
         let providers = items.flatMap { $0.attachments ?? [] }
-        
-        // Update UI to show we're processing
-        if let label = view.viewWithTag(100) as? UILabel {
-            label.text = "Processing items..."
-        }
         
         uploadTask = Task {
             do {
@@ -114,14 +255,14 @@ class ShareViewController: UIViewController {
                 
                 await MainActor.run {
                     if result.success {
-                        self.dismissWithSuccess(result.message)
+                        self.updateUIForSuccess(result.message)
                     } else {
-                        self.dismissWithError(result.message)
+                        self.updateUIForError(result.message)
                     }
                 }
             } catch {
                 await MainActor.run {
-                    self.dismissWithError("Error: \(error.localizedDescription)")
+                    self.updateUIForError("Error: \(error.localizedDescription)")
                 }
             }
         }
@@ -130,53 +271,37 @@ class ShareViewController: UIViewController {
     private func processSharedItems(_ providers: [NSItemProvider]) async throws -> PinryUploadResult {
         var pins: [PinryPin] = []
         
-        NSLog("🔍 Processing \(providers.count) providers:")
-        for (index, provider) in providers.enumerated() {
-            NSLog("  Provider \(index): Types = \(provider.registeredTypeIdentifiers)")
-        }
-        
-        for (index, provider) in providers.enumerated() {
-            NSLog("🔍 Processing provider \(index) with types: \(provider.registeredTypeIdentifiers)")
-            
-            // Check for image first (including JPGs from Safari)
+        for provider in providers {
+            // Check for image first
             if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) ||
                provider.hasItemConformingToTypeIdentifier("public.image") ||
                provider.hasItemConformingToTypeIdentifier("public.jpeg") ||
                provider.hasItemConformingToTypeIdentifier("public.png") {
-                NSLog("📷 Found image provider \(index)")
                 do {
                     let pin = try await processImageProvider(provider)
                     pins.append(pin)
-                    NSLog("✅ Successfully processed image provider \(index)")
                 } catch {
-                    NSLog("❌ Error processing image provider \(index): \(error)")
+                    // Silently continue on error
                 }
             }
             // Then check for URL/text content
             else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
-                NSLog("🔗 Found URL provider \(index)")
                 do {
                     let pin = try await processURLProvider(provider)
                     pins.append(pin)
-                    NSLog("✅ Successfully processed URL provider \(index)")
                 } catch {
-                    NSLog("❌ Error processing URL provider \(index): \(error)")
+                    // Silently continue on error
                 }
             }
-            // Only try text processing if no URL identifier is found (avoid conflicts)
+            // Only try text processing if no URL identifier is found
             else if provider.hasItemConformingToTypeIdentifier(UTType.text.identifier) &&
                     !provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
-                NSLog("📝 Found text provider \(index)")
                 do {
                     let pin = try await processURLProvider(provider)
                     pins.append(pin)
-                    NSLog("✅ Successfully processed text provider \(index)")
                 } catch {
-                    NSLog("❌ Error processing text provider \(index): \(error)")
+                    // Silently continue on error
                 }
-            }
-            else {
-                NSLog("⚠️ No supported types found for provider \(index): \(provider.registeredTypeIdentifiers)")
             }
         }
         
@@ -187,13 +312,6 @@ class ShareViewController: UIViewController {
         // Upload all pins
         let uploader = PinryUploader.shared
         var results: [PinryUploadResult] = []
-        
-        // Update UI to show we're uploading
-        await MainActor.run {
-            if let label = self.view.viewWithTag(100) as? UILabel {
-                label.text = pins.count > 1 ? "Uploading \(pins.count) items..." : "Uploading to Pinry..."
-            }
-        }
         
         for pin in pins {
             let result = await uploader.upload(pin)
@@ -216,8 +334,21 @@ class ShareViewController: UIViewController {
     }
     
     private func processImageProvider(_ provider: NSItemProvider) async throws -> PinryPin {
-        NSLog("🔍 Processing image provider. Available types: \(provider.registeredTypeIdentifiers)")
+        // Extract metadata before async operations to avoid Sendable issues
+        let description = generateImageDescription(from: provider)
+        let source = extractSource(from: provider) ?? "iOS Share"
         
+        // Reuse already-loaded image data if available
+        if let existingData = sharedImageData {
+            return PinryPin(
+                imageData: existingData,
+                description: description,
+                source: source,
+                boardID: ""
+            )
+        }
+        
+        // Otherwise load it fresh
         return try await withCheckedThrowingContinuation { continuation in
             // Try different image type identifiers based on what's available
             let imageTypes = [
@@ -231,27 +362,27 @@ class ShareViewController: UIViewController {
             
             func tryNextImageType(index: Int) {
                 guard index < imageTypes.count else {
-                    NSLog("❌ Failed to load image. Provider types: \(provider.registeredTypeIdentifiers)")
                     continuation.resume(throwing: PinryUploadError.networkError(NSError(domain: "PinryShare", code: 1, userInfo: [NSLocalizedDescriptionKey: "No supported image type found"])))
                     return
                 }
                 
                 provider.loadDataRepresentation(forTypeIdentifier: imageTypes[index]) { [weak self] data, error in
                     if let error = error {
-                        NSLog("⚠️ Failed to load \(imageTypes[index]): \(error)")
                         tryNextImageType(index: index + 1)
                     } else if let imageData = data {
-                        NSLog("✅ Successfully loaded image: \(imageData.count) bytes using type \(imageTypes[index])")
-                        
-                        // Store the first image for thumbnail display
+                        // Store for reuse and update thumbnail if not already set
                         if self?.sharedImageData == nil {
                             self?.sharedImageData = imageData
+                            
+                            // Update thumbnail on main thread
+                            if let image = UIImage(data: imageData) {
+                                DispatchQueue.main.async {
+                                    self?.updateThumbnail(with: image)
+                                }
+                            }
                         }
                         
-                        // Generate description from context
-                        let description = self?.generateImageDescription(from: provider) ?? "Shared image"
-                        let source = self?.extractSource(from: provider) ?? "iOS Share"
-                        
+                        // Use pre-extracted description and source
                         let pin = PinryPin(
                             imageData: imageData,
                             description: description,
@@ -261,7 +392,6 @@ class ShareViewController: UIViewController {
                         
                         continuation.resume(returning: pin)
                     } else {
-                        NSLog("⚠️ No data for \(imageTypes[index])")
                         tryNextImageType(index: index + 1)
                     }
                 }
@@ -328,7 +458,6 @@ class ShareViewController: UIViewController {
                     boardID: ""
                 )
                 
-                NSLog("✅ Created URL pin for: \(url)")
                 continuation.resume(returning: pin)
             }
         }
@@ -411,109 +540,83 @@ class ShareViewController: UIViewController {
         return provider.suggestedName ?? "iOS Share"
     }
     
-    // MARK: - Dismissal
+    // MARK: - UI Updates
     
-    private func dismissWithSuccess(_ message: String) {
-        showCustomAlert(message: message, isError: false) {
+    private func updateThumbnail(with image: UIImage) {
+        guard let imageView = thumbnailImageView else {
+            return
+        }
+        
+        UIView.transition(with: imageView, duration: 0.3, options: .transitionCrossDissolve) {
+            imageView.image = image
+            imageView.contentMode = .scaleAspectFill
+            imageView.backgroundColor = .clear
+            imageView.layer.borderWidth = 0
+        }
+    }
+    
+    private func updateUIForSuccess(_ message: String) {
+        // Hide spinner
+        activityIndicator?.stopAnimating()
+        activityIndicator?.alpha = 0
+        
+        // Show success icon
+        statusLabel?.text = "✓"
+        statusLabel?.textColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
+        
+        // Update message
+        messageLabel?.text = message
+        
+        // Animate changes
+        UIView.animate(withDuration: 0.2) {
+            self.statusLabel?.alpha = 1
+        }
+        
+        // Bounce the thumbnail
+        if let thumbnail = thumbnailImageView {
+            bounceView(thumbnail)
+        }
+        
+        // Auto-dismiss after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.complete()
         }
     }
     
-    private func dismissWithError(_ message: String) {
-        showCustomAlert(message: message, isError: true) {
+    private func updateUIForError(_ message: String) {
+        // Hide spinner
+        activityIndicator?.stopAnimating()
+        activityIndicator?.alpha = 0
+        
+        // Show error icon
+        statusLabel?.text = "❌"
+        statusLabel?.textColor = .systemRed
+        
+        // Update message
+        messageLabel?.text = message
+        
+        // Animate changes
+        UIView.animate(withDuration: 0.2) {
+            self.statusLabel?.alpha = 1
+        }
+        
+        // Bounce the thumbnail
+        if let thumbnail = thumbnailImageView {
+            bounceView(thumbnail)
+        }
+        
+        // Auto-dismiss after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.cancel(message)
         }
     }
     
-    private func showCustomAlert(message: String, isError: Bool, completion: @escaping () -> Void) {
-        // Remove loading UI
-        view.subviews.forEach { $0.removeFromSuperview() }
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        
-        // Create custom modal container
-        let modalView = UIView()
-        modalView.backgroundColor = .secondarySystemBackground
-        modalView.layer.cornerRadius = 16
-        modalView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Container for content
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 16
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Thumbnail (if available)
-        if let imageData = sharedImageData, let image = UIImage(data: imageData) {
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
-            imageView.layer.cornerRadius = 8
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.addArrangedSubview(imageView)
-            
-            NSLayoutConstraint.activate([
-                imageView.widthAnchor.constraint(equalToConstant: 80),
-                imageView.heightAnchor.constraint(equalToConstant: 80)
-            ])
-        }
-        
-        // Status icon
-        let statusLabel = UILabel()
-        statusLabel.text = isError ? "❌" : "✓"
-        statusLabel.font = .systemFont(ofSize: isError ? 32 : 44, weight: .regular)
-        statusLabel.textColor = isError ? .systemRed : UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
-        stackView.addArrangedSubview(statusLabel)
-        
-        // Message
-        let messageLabel = UILabel()
-        messageLabel.text = message
-        messageLabel.font = .systemFont(ofSize: 15, weight: .regular)
-        messageLabel.textColor = .secondaryLabel
-        messageLabel.textAlignment = .center
-        messageLabel.numberOfLines = 0
-        stackView.addArrangedSubview(messageLabel)
-        
-        // OK Button
-        let button = UIButton(type: .system)
-        button.setTitle("OK", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
-        button.layer.cornerRadius = 28
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        button.addAction(UIAction { _ in
-            completion()
-        }, for: .touchUpInside)
-        
-        modalView.addSubview(stackView)
-        modalView.addSubview(button)
-        view.addSubview(modalView)
-        
-        NSLayoutConstraint.activate([
-            modalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            modalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            modalView.widthAnchor.constraint(equalToConstant: 280),
-            
-            stackView.topAnchor.constraint(equalTo: modalView.topAnchor, constant: 24),
-            stackView.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -24),
-            
-            button.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
-            button.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 24),
-            button.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -24),
-            button.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -24),
-            button.heightAnchor.constraint(equalToConstant: 56)
-        ])
-        
-        // Animate in
-        modalView.alpha = 0
-        modalView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5) {
-            modalView.alpha = 1
-            modalView.transform = .identity
-        }
+    private func bounceView(_ view: UIView) {
+        let animation = CAKeyframeAnimation(keyPath: "transform.scale")
+        animation.values = [1.0, 1.2, 0.9, 1.1, 1.0]
+        animation.keyTimes = [0, 0.2, 0.4, 0.6, 0.8]
+        animation.duration = 0.5
+        view.layer.add(animation, forKey: "bounce")
     }
     
     private func complete() {

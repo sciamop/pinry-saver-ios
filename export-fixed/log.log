@@ -1,0 +1,548 @@
+default	15:33:45.904251-0500	runningboardd	'(null)' Submitting extension overlay (host PID 19369, path /private/var/containers/Bundle/Application/E22B44DB-A1CF-4F9C-8AF7-0493C2B939DA/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension):
+<dictionary: 0x72f82b7e0> { count = 3, transaction: 0, voucher = 0x0, contents =
+	"XPCService" => <dictionary: 0x72f82af40> { count = 12, transaction: 0, voucher = 0x0, contents =
+		"_ManagedBy" => <string: 0x72ee719b0> { string cache = 0x0, length = 22, contents = "com.apple.runningboard" }
+		"RunLoopType" => <string: 0x72ee71a70> { string cache = 0x0, length = 18, contents = "_UIApplicationMain" }
+		"Platform" => <int64: 0x912fd780de482c07>: 2
+		"_SandboxProfile" => <string: 0x72ee72eb0> { string cache = 0x0, length = 6, contents = "plugin" }
+		"_AdditionalSubServices" => <dictionary: 0x72f82b8a0> { count = 2, transaction: 0, voucher = 0x0, contents =
+			"viewservice" => <bool: 0x1fc5edc40>: true
+			"apple-extension-service" => <bool: 0x1fc5edc40>: true
+		}
+		"PersonaEnterprise" => <int64: 0x912fd780de483357>: 1000
+		"_AdditionalProperties" => <dictionary: 0x72f82a460> { count = 1, transaction: 0, voucher = 0x0, contents =
+			"RunningBoard" => <dictionary: 0x72f82a2e0> { count = 4, transaction: 0, voucher = 0x0, contents =
+				"Managed" => <bool: 0x1fc5edc40>: true
+				"RunningBoardLaunchedIdentity" => <dictionary: 0x72f82aca0> { count = 5, transaction: 0, voucher = 0x0, contents =
+					"TYPE" => <int64: 0x912fd780de482c37>: 4
+					"h" => <int64: 0x912fd780de4a715f>: 19369
+					"i" => <string: 0x72ee73a50> { string cache = 0x0, length = 37, contents = "com.example.pinrysaver.shareextension" }
+					"r" => <int64: 0x912fd780de482c07>: 2
+					"H" => <dictionary: 0x72f82ba80> { count = 3, transaction: 0, voucher = 0x0, contents =
+						"TYPE" => <int64: 0x912fd780de482c07>: 2
+						"EAI" => <string: 0x72ee71a10> { string cache = 0x0, length = 23, contents = "org.mozilla.ios.Firefox" }
+						"PERS" => <string: 0x72ee72880> { string cache = 0x0, length = 36, contents = "37EB2581-EC6A-4D49-8BC7-08A93418A3F3" }
+					}
+				}
+				"RunningBoardLaunched" => <bool: 0x1fc5edc40>: true
+				"LaunchRequestEndpointIdentifiers" => <dictionary: 0x72f828f60> { count = 2, transaction: 0, voucher = 0x0, contents =
+					"com.example.pinrysaver.shareextension.viewservice" => <string: 0x72ee72f10> { string cache = 0x0, length = 49, contents = "com.example.pinrysaver.shareextension.viewservice" }
+					"com.apple.frontboard.workspace-service" => <string: 0x72ee70990> { string cache = 0x0, length = 49, contents = "com.example.pinrysaver.shareextension.viewservice" }
+				}
+			}
+		}
+		"EnvironmentVariables" => <dictionary: 0x72f82aa60> { count = 3, transaction: 0, voucher = 0x0, contents =
+			"TMPDIR" => <string: 0x72ee72e50> { string cache = 0x0, length = 92, contents = "/private/var/mobile/Containers/Data/PluginKitPlugin/87B51F10-0EA2-4F39-B804-079B343B0A28/tmp" }
+			"HOME" => <string: 0x72ee72640> { string cache = 0x0, length = 88, contents = "/private/var/mobile/Containers/Data/PluginKitPlugin/87B51F10-0EA2-4F39-B804-079B343B0A28" }
+			"CFFIXED_USER_HOME" => <string: 0x72ee72970> { string cache = 0x0, length = 88, contents = "/private/var/mobile/Containers/Data/PluginKitPlugin/87B51F10-0EA2-4F39-B804-079B343B0A28" }
+		}
+		"_OmitSandboxParameters" => <bool: 0x1fc5edc40>: true
+		"ServiceType" => <string: 0x72ee739c0> { string cache = 0x0, length = 11, contents = "Application" }
+		"_ManagedBy_Services" => <array: 0x72ee73000> { count = 1, capacity = 8, contents =
+			0: <string: 0x72ee70a80> { string cache = 0x0, length = 49, contents = "com.example.pinrysaver.shareextension.viewservice" }
+		}
+		"ProgramArguments" => <array: 0x72ee70540> { count = 3, capacity = 8, contents =
+			0: <string: 0x72ee72310> { string cache = 0x0, length = 155, contents = "/private/var/containers/Bundle/Application/E22B44DB-A1CF-4F9C-8AF7-0493C2B939DA/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension" }
+			1: <string: 0x72ee734e0> { string cache = 0x0, length = 15, contents = "-AppleLanguages" }
+			2: <string: 0x72ee71bc0> { string cache = 0x0, length = 9, contents = "("en-US")" }
+		}
+	}
+	"RunningBoard" => <dictionary: 0x72f829f20> { count = 1, transaction: 0, voucher = 0x0, contents =
+		"Managed" => <bool: 0x1fc5edc40>: true
+	}
+	"CFBundlePackageType" => <string: 0x72ee70cf0> { string cache = 0x0, length = 4, contents = "XPC!" }
+}
+default	15:33:45.924134-0500	kernel	/private/var/containers/Bundle/Application/E22B44DB-A1CF-4F9C-8AF7-0493C2B939DA/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension[19926] ==> container
+error	15:33:45.924875-0500	kernel	Sandbox: PinryShareExtension(19926) deny(1) sysctl-read kern.bootargs
+default	15:33:45.946455-0500	PinryShareExtension	Extension `/private/var/containers/Bundle/Application/E22B44DB-A1CF-4F9C-8AF7-0493C2B939DA/pinry-saver-ios-2.app/PlugIns/PinryShareExtension.appex/PinryShareExtension` of type: `` launched.
+default	15:33:45.946525-0500	PinryShareExtension	Hello, I'm launching as euid = 501, uid = 501, personaid = 1000, type = DEFAULT, name = <private>
+default	15:33:45.948072-0500	PinryShareExtension	[0x104b105d0] activating connection: mach=true listener=false peer=false name=com.apple.lsd.mapdb
+default	15:33:45.949568-0500	PinryShareExtension	[0x104b13fe0] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon.system
+default	15:33:45.949671-0500	PinryShareExtension	[0x104b14120] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon
+default	15:33:45.950742-0500	PinryShareExtension	Initializing connection
+default	15:33:45.950769-0500	PinryShareExtension	Removing all cached process handles
+default	15:33:45.950793-0500	PinryShareExtension	Sending handshake request attempt #1 to server
+default	15:33:45.950850-0500	PinryShareExtension	Creating connection to com.apple.runningboard
+default	15:33:45.950871-0500	PinryShareExtension	[0x1140f8000] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+default	15:33:45.951555-0500	PinryShareExtension	Handshake succeeded
+default	15:33:45.951560-0500	PinryShareExtension	Identity resolved as xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}
+default	15:33:45.951633-0500	PinryShareExtension	Bootstrapping; Bootstrap complete. Ready for handshake from host.
+default	15:33:45.952521-0500	PinryShareExtension	[C:1] Alloc com.apple.frontboard.systemappservices
+default	15:33:45.952593-0500	PinryShareExtension	[0x1140f8280] activating connection: mach=false listener=false peer=false name=(anonymous)
+default	15:33:45.952930-0500	PinryShareExtension	Creating new assertion because there is no existing background assertion.
+default	15:33:45.952950-0500	PinryShareExtension	Creating new background assertion
+default	15:33:45.952963-0500	PinryShareExtension	Cache loaded with 6210 pre-cached in CacheData and 72 items in CacheExtra.
+default	15:33:45.952970-0500	PinryShareExtension	Created new background assertion <BKSProcessAssertion: 0x104b22820>
+default	15:33:45.953273-0500	PinryShareExtension	Incrementing reference count for background assertion <private>
+default	15:33:45.953280-0500	PinryShareExtension	Created background task <private>.
+default	15:33:45.953346-0500	PinryShareExtension	Realizing settings extension _UIApplicationSceneKeyboardSettings on FBSSceneSettings
+default	15:33:45.953736-0500	PinryShareExtension	Realizing settings extension <_UISceneOcclusionSettings> on FBSSceneSettings
+default	15:33:45.953804-0500	PinryShareExtension	Realizing settings extension <_UISceneInterfaceProtectionSettings> on FBSSceneSettings
+default	15:33:45.954153-0500	PinryShareExtension	Realizing settings extension _UISceneLayoutPreferencesHostSettingsExtension on FBSSceneSettings
+default	15:33:45.954180-0500	PinryShareExtension	Realizing settings extension _UISceneSafeAreaSettingsExtension on FBSSceneSettings
+default	15:33:45.954288-0500	PinryShareExtension	Realizing settings extension _UISceneLayoutPreferenceClientSettingsExtension on FBSSceneClientSettings
+default	15:33:45.954834-0500	PinryShareExtension	Realizing settings extension <_UIHomeAffordanceHostSceneSettings> on FBSSceneSettings
+default	15:33:45.954863-0500	PinryShareExtension	Realizing settings extension _UISystemShellSceneHostingEnvironmentSettings on FBSSceneSettings
+default	15:33:45.954874-0500	backboardd	Connection added: IOHIDEventSystemConnection uuid:DA54B458-BBF0-4176-A402-F905A1CBA64D pid:19926 process:PinryShareExtension type:Passive entitlements:0x0 caller:BackBoardServices: <redacted> + 280 attributes:{
+    HighFrequency = 1;
+    bundleID = "com.example.pinrysaver.shareextension";
+    pid = 19926;
+} state:0x0 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+default	15:33:45.954905-0500	PinryShareExtension	Realizing settings extension _UISceneRenderingEnvironmentSettings on FBSSceneSettings
+default	15:33:45.955275-0500	backboardd	Adding client connection: <BKHIDClientConnection: 0x6c8d05440; IOHIDEventSystemConnectionRef: 0x6c33e9e00; vpid: 19926(vCF01); taskPort: 0xC162F; bundleID: com.example.pinrysaver.shareextension> for client: IOHIDEventSystemConnection uuid:DA54B458-BBF0-4176-A402-F905A1CBA64D pid:19926 process:PinryShareExtension type:Passive entitlements:0x0 caller:BackBoardServices: <redacted> + 280 attributes:{
+    HighFrequency = 1;
+    bundleID = "com.example.pinrysaver.shareextension";
+    pid = 19926;
+} state:0x0 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+default	15:33:45.955470-0500	PinryShareExtension	Realizing settings extension <_UISceneRenderingEnvironmentClientSettings> on FBSSceneClientSettings
+default	15:33:45.955508-0500	PinryShareExtension	Realizing settings extension <_UISceneTransitioningHostSettings> on FBSSceneSettings
+default	15:33:45.955533-0500	PinryShareExtension	Realizing settings extension <_UISceneFocusSystemSettings> on FBSSceneSettings
+default	15:33:45.955589-0500	PinryShareExtension	Realizing settings extension <_UISceneMainMenuSettings> on FBSSceneSettings
+default	15:33:45.956003-0500	PinryShareExtension	Realizing settings extension _UISceneOrientationSettingsExtension on FBSSceneSettings
+default	15:33:45.956027-0500	PinryShareExtension	Realizing settings extension _UISceneOrientationClientSettingsExtension on FBSSceneClientSettings
+default	15:33:45.956043-0500	PinryShareExtension	Realizing settings extension _UISceneWindowingControlClientSettings on FBSSceneClientSettings
+default	15:33:45.956095-0500	PinryShareExtension	Realizing settings extension <_UISceneHostingContentSizePreferenceClientSettings> on FBSSceneClientSettings
+default	15:33:45.956141-0500	PinryShareExtension	Realizing settings extension _UISceneHostingTraitCollectionPropagationSettings on FBSSceneSettings
+default	15:33:45.956166-0500	PinryShareExtension	Realizing settings extension <_UISceneHostingSheetPresentationSettings> on FBSSceneSettings
+default	15:33:45.956515-0500	PinryShareExtension	Realizing settings extension <_UISceneHostingSheetPresentationClientSettings> on FBSSceneClientSettings
+default	15:33:45.956532-0500	PinryShareExtension	Realizing settings extension <_UISceneHostingEventDeferringSettings> on FBSSceneSettings
+default	15:33:45.956607-0500	PinryShareExtension	Realizing settings extension <UIKit__UITypedKeyValueSceneSettings> on FBSSceneSettings
+default	15:33:45.956623-0500	PinryShareExtension	Realizing settings extension <UIKit__UITypedKeyValueSceneSettings> on FBSSceneClientSettings
+default	15:33:45.956670-0500	PinryShareExtension	Realizing settings extension <_UISceneHostingViewControllerPreferencePropagationClientSettings> on FBSSceneClientSettings
+default	15:33:45.956749-0500	PinryShareExtension	Realizing settings extension <_UISceneZoomTransitionSettings> on FBSSceneSettings
+default	15:33:45.959907-0500	PinryShareExtension	Deactivation reason added: 10; deactivation reasons: 0 -> 1024; animating application lifecycle event: 0
+default	15:33:45.959949-0500	PinryShareExtension	activating monitor for service com.apple.frontboard.open
+default	15:33:45.959964-0500	PinryShareExtension	activating monitor for service com.apple.frontboard.workspace-service
+default	15:33:45.959984-0500	PinryShareExtension	FBSWorkspace registering source: <private>
+default	15:33:45.960127-0500	PinryShareExtension	FBSWorkspace connected to endpoint : <private>
+default	15:33:45.960156-0500	PinryShareExtension	<FBSWorkspaceScenesClient:0x11421b0c0 <private>> attempting immediate handshake from activate
+default	15:33:45.960181-0500	PinryShareExtension	<FBSWorkspaceScenesClient:0x11421b0c0 <private>> sent handshake
+default	15:33:45.960237-0500	PinryShareExtension	Added observer for process assertions expiration warning: <_RBSExpirationWarningClient: 0x114208720>
+default	15:33:45.960529-0500	PinryShareExtension	Evaluated capturing state as 0 on <UIScreen: 0x1140f8b40> for initial
+default	15:33:45.960545-0500	PinryShareExtension	Evaluated capturing state as 0 on <UIScreen: 0x1140f8b40> for CADisplay KVO
+default	15:33:45.961113-0500	PinryShareExtension	Read CategoryName: per-app = 1, category name = (null)
+default	15:33:45.961208-0500	PinryShareExtension	Read CategoryName: per-app = 0, category name = UICTContentSizeCategoryM
+default	15:33:45.963702-0500	PinryShareExtension	Registering for test daemon availability notify post.
+default	15:33:45.963810-0500	PinryShareExtension	notify_get_state check indicated test daemon not ready.
+default	15:33:45.963903-0500	PinryShareExtension	notify_get_state check indicated test daemon not ready.
+default	15:33:45.963989-0500	PinryShareExtension	notify_get_state check indicated test daemon not ready.
+default	15:33:45.964386-0500	PinryShareExtension	Deactivation reason removed: 10; deactivation reasons: 1024 -> 0; animating application lifecycle event: 0
+default	15:33:45.964747-0500	PinryShareExtension	Event Timing Profile for Touch: ok, path="/System/Library/EventTimingProfiles/J620.Touch.plist"
+default	15:33:45.964811-0500	PinryShareExtension	Event Timing Profile for Pencil: ok, path="/System/Library/EventTimingProfiles/J620.Pencil.plist"
+default	15:33:45.964829-0500	PinryShareExtension	Selected display: name=LCD (primary), id=1
+default	15:33:45.964838-0500	PinryShareExtension	[0x1140f8140] activating connection: mach=false listener=true peer=false name=com.example.pinrysaver.shareextension
+default	15:33:45.967504-0500	PinryShareExtension	[0x114180300] activating connection: mach=false listener=false peer=true name=com.example.pinrysaver.shareextension.peer[19369].0x114180300
+default	15:33:45.967600-0500	PinryShareExtension	[u A463A021-6DED-4B83-809C-B0A68827D012] [(null)((null))] Prepare received as euid = 501, uid = 501, personaid = 1000, type = DEFAULT, name = <private>
+default	15:33:45.967982-0500	PinryShareExtension	[u F1B29794-B7EC-440F-8A4D-FC823C215418] [<private>(<private>)] Set sole personality.
+default	15:33:45.968197-0500	PinryShareExtension	Class EXGetExtensionClass(void) returning EXConcreteExtension
+default	15:33:45.968332-0500	PinryShareExtension	[0x114180480] readying connection: mach=true listener=true peer=false name=com.example.pinrysaver.shareextension.viewservice
+default	15:33:45.968374-0500	PinryShareExtension	[u F1B29794-B7EC-440F-8A4D-FC823C215418] [<private>(<private>)] Begin using received as euid = 501, uid = 501, personaid = 1000, type = DEFAULT, name = <private>
+default	15:33:45.968380-0500	PinryShareExtension	Starting connection listener with name com.example.pinrysaver.shareextension.viewservice
+default	15:33:45.968432-0500	PinryShareExtension	This process will acquire finish-task workspace self-assertions.
+default	15:33:45.968501-0500	PinryShareExtension	no previous workspace connections state - initializing
+default	15:33:45.968514-0500	PinryShareExtension	Registering Source for 19926 : <FBWorkspaceEventDispatcherSource: 0x114021a40>
+default	15:33:45.968647-0500	PinryShareExtension	[xpcservice<com.example.pinrysaver.shareextension>:19926] Registering event dispatcher at init
+default	15:33:45.968652-0500	PinryShareExtension	Created <FBWorkspace: 0x11421b340; <FBApplicationProcess: 0x114180600; xpcservice<com.example.pinrysaver.shareextension>:19926(vCF01)>>
+default	15:33:45.968667-0500	PinryShareExtension	Bootstrapping xpcservice<com.example.pinrysaver.shareextension>
+error	15:33:45.969368-0500	PinryShareExtension	Error acquiring assertion: <Error Domain=RBSAssertionErrorDomain Code=2 "Could not find attribute name in domain plist" UserInfo={NSLocalizedFailureReason=Could not find attribute name in domain plist}>
+default	15:33:45.969443-0500	PinryShareExtension	FBWorkspaceAssertionAttributes:0x1f900f760 using v2 assertions because we failed acquiring 'Workspace-Test' with error=Error Domain=RBSAssertionErrorDomain Code=2 UserInfo={NSLocalizedFailureReason=<private>}
+default	15:33:45.969821-0500	PinryShareExtension	[xpcservice<com.example.pinrysaver.shareextension>:19926] Bootstrap success!
+default	15:33:45.970047-0500	PinryShareExtension	Creating side-channel connection to com.apple.runningboard
+default	15:33:45.970056-0500	PinryShareExtension	[0x1140f9400] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+default	15:33:45.970335-0500	PinryShareExtension	Hit the server for a process handle 16c15ca600004dd6 that resolved to: [xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}:19926]
+default	15:33:45.970381-0500	PinryShareExtension	Realizing settings extension FBSSceneSettingsCore on FBSSceneSettings
+default	15:33:45.970926-0500	PinryShareExtension	[xpcservice<com.example.pinrysaver.shareextension>:19926] Skipping workspace endpoint injector.
+default	15:33:45.970943-0500	PinryShareExtension	[xpcservice<com.example.pinrysaver.shareextension>:19926] Connection to remote process established!
+default	15:33:45.970956-0500	PinryShareExtension	Starting death monitoring for handle <private>
+default	15:33:45.971067-0500	PinryShareExtension	Updating configuration of monitor M19926-1
+default	15:33:45.971225-0500	PinryShareExtension	initializing view-service domain com.apple.uikit.viewservice
+default	15:33:45.971292-0500	PinryShareExtension	[0x114180480] activating connection: mach=true listener=true peer=false name=com.example.pinrysaver.shareextension.viewservice
+default	15:33:45.971299-0500	PinryShareExtension	Class EXGetExtensionContextVendorClass(void) returning EXConcreteExtensionContextVendor
+default	15:33:45.971306-0500	PinryShareExtension	[0x114180900] activating connection: mach=true listener=true peer=false name=com.example.pinrysaver.shareextension.apple-extension-service
+default	15:33:45.971314-0500	PinryShareExtension	Scheduling launchd after initial event
+default	15:33:45.971472-0500	PinryShareExtension	[0x114180a80] activating connection: mach=false listener=false peer=true name=com.example.pinrysaver.shareextension.apple-extension-service.peer[19369].0x114180a80
+default	15:33:45.971606-0500	PinryShareExtension	Class EXGetExtensionContextInternalClass(void) returning EXExtensionContextImplementation
+default	15:33:45.971718-0500	PinryShareExtension	in _willPerformHostCallback: block ( UUID: F62BCED1-6685-45DE-903C-2432DD624816 error: (null) )
+default	15:33:45.976924-0500	PinryShareExtension	[C:2] Alloc <private>
+default	15:33:45.977030-0500	PinryShareExtension	[0x1140f9040] activating connection: mach=false listener=false peer=false name=(anonymous)
+default	15:33:45.977077-0500	PinryShareExtension	FBSWorkspace registering source: <private>
+default	15:33:45.977139-0500	PinryShareExtension	FBSWorkspace connected to endpoint : <private>
+default	15:33:45.977229-0500	PinryShareExtension	<FBSWorkspaceScenesClient:0x11421b700 <private>> attempting immediate handshake from activate
+default	15:33:45.977292-0500	PinryShareExtension	<FBSWorkspaceScenesClient:0x11421b700 <private>> sent handshake
+default	15:33:45.982865-0500	PinryShareExtension	[S:3] Alloc <private>
+default	15:33:45.982940-0500	PinryShareExtension	[0x114180c00] activating connection: mach=false listener=false peer=true name=com.example.pinrysaver.shareextension.viewservice.peer[19369].0x114180c00
+default	15:33:45.983170-0500	PinryShareExtension	FBSWorkspace registering source: <private>
+default	15:33:45.983242-0500	PinryShareExtension	FBSWorkspace connected to peer : <private>
+default	15:33:45.983279-0500	PinryShareExtension	<FBSWorkspaceScenesClient:0x11421b980 <private>> attempting immediate handshake from activate
+default	15:33:45.983405-0500	PinryShareExtension	<FBSWorkspaceScenesClient:0x11421b980 <private>> sent handshake
+default	15:33:45.984709-0500	PinryShareExtension	Realizing settings extension <_UIViewServiceSceneSettings> on FBSSceneSettings
+default	15:33:45.984842-0500	PinryShareExtension	Realizing settings extension <_UIViewServiceClientSettings> on FBSSceneClientSettings
+default	15:33:45.984936-0500	PinryShareExtension	Realizing settings extension FBSSceneClientSettingsCore on FBSSceneClientSettings
+default	15:33:45.985331-0500	PinryShareExtension	UIMutableApplicationSceneSettings setting counterpart class: UIApplicationSceneSettings
+default	15:33:45.985477-0500	PinryShareExtension	Realizing settings extension FBSSceneTransitionContextCore on FBSSceneTransitionContext
+default	15:33:45.986198-0500	PinryShareExtension	Realizing settings extension <_UISceneScrollPocketSettings> on FBSSceneSettings
+default	15:33:45.986418-0500	PinryShareExtension	Realizing settings extension <_UISceneScrollPocketClientSettings> on FBSSceneClientSettings
+default	15:33:45.986469-0500	PinryShareExtension	Realizing settings extension <_UISceneIntelligenceSupportSettings> on FBSSceneSettings
+default	15:33:45.986483-0500	PinryShareExtension	Realizing settings extension _UISceneExternalSettingsModifierSettingsExtension on FBSSceneSettings
+default	15:33:45.987556-0500	PinryShareExtension	UIMutableApplicationSceneClientSettings setting counterpart class: UIApplicationSceneClientSettings
+default	15:33:45.987842-0500	PinryShareExtension	Should send trait collection or coordinate space update, interface style 2 -> 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:45.988241-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:45.988692-0500	PinryShareExtension	Initializing: <_UIHomeAffordanceSceneNotifier: 0x114103aa0>; with scene: <_UIHostedWindowScene: 0x114184780>
+default	15:33:45.988749-0500	PinryShareExtension	0x1142c5440 setDelegate:<0x1142c5710 _UIBacklightEnvironment> hasDelegate:YES for environment:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:45.989042-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:45.989063-0500	PinryShareExtension	[0x114103bf0] Initialized with scene: <_UIHostedWindowScene: 0x114184780>; behavior: <_UIEventDeferringBehavior_iOS: 0x11407b160>; availableForProcess: 1, systemShellManagesKeyboardFocus: 1
+default	15:33:45.989152-0500	PinryShareExtension	[C:4] Alloc com.apple.backboard.hid-services.xpc
+default	15:33:45.989164-0500	PinryShareExtension	[0x1140f97c0] activating connection: mach=false listener=false peer=false name=(anonymous)
+default	15:33:45.989780-0500	PinryShareExtension	BKSHIDEventObserver - connection activation
+default	15:33:45.989794-0500	PinryShareExtension	policyStatus:<BKSHIDEventDeliveryPolicyObserver: 0x114047720; process scope; status: none> was:none
+default	15:33:45.989815-0500	PinryShareExtension	Setting default evaluation strategy for UIUserInterfaceIdiomPad to LastOneWins
+default	15:33:45.990041-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:45.993793-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:45.994008-0500	PinryShareExtension	Configuring view service scene for 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773:
+default	15:33:45.994828-0500	PinryShareExtension	<_UIViewServiceRootViewController: 0x1140bc400>: Set materialized view controller: <PinryShareExtension.ShareViewController: 0x114240000>
+default	15:33:45.999171-0500	PinryShareExtension	Key window API is scene-level: YES
+default	15:33:45.999255-0500	PinryShareExtension	_UIHostedWindowScene: 0x114184780: Window became key in scene: UIWindow: 0x1140bc000; contextId: 0xA9481091: reason: _UIHostedWindowScene: 0x114184780: Window requested to become key in scene: 0x1140bc000
+default	15:33:45.999268-0500	PinryShareExtension	Key window needs update: 1; currentKeyWindowScene: 0x0; evaluatedKeyWindowScene: 0x114184780; currentApplicationKeyWindow: 0x0; evaluatedApplicationKeyWindow: 0x1140bc000; reason: _UIHostedWindowScene: 0x114184780: Window requested to become key in scene: 0x1140bc000
+default	15:33:45.999279-0500	PinryShareExtension	Window did become application key: UIWindow: 0x1140bc000; contextId: 0xA9481091; scene identity: 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:45.999286-0500	PinryShareExtension	[0x114103bf0] Begin local event deferring requested for token: 0x114047120; environments: 1; reason: _UIHostedWindowScene: 0x114184780: Begin event deferring in keyboardFocus for window: 0x1140bc000
+default	15:33:45.999473-0500	PinryShareExtension	BKSHIDEventDeliveryManager - connection activation
+default	15:33:45.999494-0500	PinryShareExtension	Skipping auxiliary connection for 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773: <PinryShareExtension.ShareViewController: 0x114240000>
+default	15:33:46.999532-0500	PinryShareExtension	SecTaskLoadEntitlements: failed to get cs_flags, error=1, pid=19369
+error	15:33:46.999742-0500	kernel	Sandbox: PinryShareExtension(19926) deny(1) process-info-codesignature others [Client(19369)]
+default	15:33:46.999772-0500	PinryShareExtension	<private>
+default	15:33:46.000070-0500	PinryShareExtension	Requesting app group container lookup; personaid = 1000, type = DEFAULT, name = 37EB2581-EC6A-4D49-8BC7-08A93418A3F3, origin [pid = 19369, personaid = 1000], proximate [pid = 19369, personaid = 1000], identifier = <private>, euid = 501, uid = 501, platform = 2
+default	15:33:46.000315-0500	PinryShareExtension	<_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773) Scene updated orientation preferences: none -> ( Pu Ll Lr Pd )
+default	15:33:46.000340-0500	PinryShareExtension	<_UIViewServiceRootViewController: 0x1140bc400>: Installed materialized view controller in hierarchy: <PinryShareExtension.ShareViewController: 0x114240000>
+default	15:33:46.000560-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.000608-0500	PinryShareExtension	Deactivation reason added: 12; deactivation reasons: 0 -> 4096; animating application lifecycle event: 0
+default	15:33:46.000669-0500	PinryShareExtension	Deactivation reason removed: 11; deactivation reasons: 4096 -> 4096; animating application lifecycle event: 0
+default	15:33:46.000771-0500	PinryShareExtension	Deactivation reason removed: 12; deactivation reasons: 4096 -> 0; animating application lifecycle event: 0
+default	15:33:46.000963-0500	PinryShareExtension	Send setDeactivating: N (-DeactivationReason:SuspendedEventsOnly)
+default	15:33:46.000984-0500	PinryShareExtension	Creating hang event with BundleID: com.example.pinrysaver.shareextension
+default	15:33:46.001022-0500	PinryShareExtension	Updating event->rollingFGTimestamp from INVALID_FOREGROUND_TIMESTAMP to 6831498392551
+default	15:33:46.001755-0500	PinryShareExtension	Updating configuration of monitor M19926-2
+default	15:33:46.001827-0500	PinryShareExtension	[0x11434c640] activating connection: mach=true listener=false peer=false name=com.apple.hangtracermonitor
+default	15:33:46.001926-0500	PinryShareExtension	Skip setting user action callback for 3rd party apps
+default	15:33:46.001981-0500	PinryShareExtension	[0x11434c640] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+default	15:33:46.002054-0500	PinryShareExtension	Received state update for 19926 (xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}, running-active-NotVisible
+default	15:33:46.003354-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.004209-0500	PinryShareExtension	Consumed sandbox extension; path = [<private>], handle = 1
+default	15:33:46.004228-0500	PinryShareExtension	container_create_or_lookup_app_group_path_by_app_group_identifier: success
+default	15:33:46.004342-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+error	15:33:46.004859-0500	PinryShareExtension	Couldn't read values in CFPrefsPlistSource<0x1142daa80> (Domain: group.com.example.pinry, User: kCFPreferencesAnyUser, ByHost: Yes, Container: (null), Contents Need Refresh: Yes): Using kCFPreferencesAnyUser with a container is only allowed for System Containers, detaching from cfprefsd
+default	15:33:46.007771-0500	PinryShareExtension	Ending background task with UIBackgroundTaskIdentifier: 1
+default	15:33:46.007884-0500	PinryShareExtension	Ending task with identifier 1 and description: <private>, _expireHandler: (null)
+default	15:33:46.007966-0500	PinryShareExtension	Decrementing reference count for assertion <private> (used by background task with identifier 1: <private>)
+default	15:33:46.008002-0500	PinryShareExtension	Will invalidate assertion: <BKSProcessAssertion: 0x104b22820> for task identifier: 1
+error	15:33:46.008373-0500	PinryShareExtension	⚠️ NO IMAGE PROVIDER FOUND in initial scan - will load during upload processing
+error	15:33:46.008595-0500	PinryShareExtension	⚠️ NO IMAGE DATA - showing placeholder
+default	15:33:46.011812-0500	PinryShareExtension	Warning: no visual style classes have been registered at all.
+default	15:33:46.011826-0500	PinryShareExtension	Warning: no visual style classes have been registered at all.
+default	15:33:46.011833-0500	PinryShareExtension	Note: no default visual style class registered as fallback for stylable class UIActivityIndicatorView
+default	15:33:46.011898-0500	PinryShareExtension	Note: no default visual style class registered as fallback for stylable class UIActivityIndicatorView
+default	15:33:46.011957-0500	PinryShareExtension	Not observing PTDefaults on customer install.
+default	15:33:46.012377-0500	PinryShareExtension	[0x11434e1c0] activating connection: mach=true listener=false peer=false name=com.apple.fontservicesd
+default	15:33:46.015222-0500	PinryShareExtension	Change from input view set: (null)
+default	15:33:46.015228-0500	PinryShareExtension	Change to input view set: (null)
+default	15:33:46.016355-0500	PinryShareExtension	_moveGuideOffscreenAtEdge: 4
+default	15:33:46.016383-0500	PinryShareExtension	changeOffsetConstants: offset is changing to {0, 0} [previous offset: {-1, -1}]
+default	15:33:46.016587-0500	PinryShareExtension	changeSizingConstants: size is changing [not transitioning] to {1366, 0} [previous size: {1, 0}]
+default	15:33:46.017106-0500	PinryShareExtension	Target list changed: <CADisplay:LCD primary>
+default	15:33:46.021043-0500	PinryShareExtension	<private>
+default	15:33:46.021178-0500	PinryShareExtension	<private>
+default	15:33:46.021258-0500	PinryShareExtension	<private>
+default	15:33:46.021641-0500	PinryShareExtension	<private>
+fault	15:33:46.021965-0500	PinryShareExtension	-[_EXSinkLoadOperator loadItemForTypeIdentifier:completionHandler:expectedValueClass:options:] nil expectedValueClass allowing {(
+    NSData,
+    NSMutableString,
+    NSUUID,
+    NSMutableData,
+    CKShare,
+    NSNumber,
+    NSError,
+    NSArray,
+    NSDate,
+    NSDictionary,
+    NSURL,
+    NSString,
+    UIImage,
+    _EXItemProviderSandboxedResource,
+    NSMutableArray,
+    NSMutableDictionary,
+    NSValue
+)}
+default	15:33:46.022063-0500	PinryShareExtension	[0x1140fad00] activating connection: mach=false listener=false peer=false name=(anonymous)
+default	15:33:46.022159-0500	PinryShareExtension	startConnection
+default	15:33:46.022294-0500	PinryShareExtension	[0x1140fbac0] activating connection: mach=true listener=false peer=false name=com.apple.UIKit.KeyboardManagement.hosted
+default	15:33:46.022552-0500	PinryShareExtension	<private>
+default	15:33:46.023422-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.023523-0500	PinryShareExtension	<private>
+default	15:33:46.026021-0500	PinryShareExtension	networkd_settings_read_from_file initialized networkd settings by reading plist directly
+default	15:33:46.026082-0500	PinryShareExtension	networkd_settings_read_from_file initialized networkd settings by reading plist directly
+default	15:33:46.026508-0500	PinryShareExtension	[0x1140fb700] activating connection: mach=true listener=false peer=false name=com.apple.hangtracerd
+default	15:33:46.026622-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> resuming, timeouts(60.0, 604800.0) qos(0x19) voucher(<private>) activity(00000000-0000-0000-0000-000000000000)
+default	15:33:46.026645-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+error	15:33:46.026899-0500	kernel	1 duplicate report for Sandbox: PinryShareExtension(19926) deny(1) process-info-codesignature others [Client(19369)]
+default	15:33:46.027095-0500	PinryShareExtension	KeyboardTrackingCoordinator: Creating tracking coordinator for <_UIHostedWindowScene: 0x114184780; role: UISceneSessionRoleSceneHosting; persistentIdentifier: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773; activationState: UISceneActivationStateForegroundActive>
+default	15:33:46.034053-0500	PinryShareExtension	-[SOConfigurationClient init]  on <private>
+default	15:33:46.036803-0500	PinryShareExtension	Should send trait collection or coordinate space update, interface style 2 -> 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.036869-0500	PinryShareExtension	[0x11434c8c0] activating connection: mach=true listener=false peer=false name=com.apple.AppSSO.service-xpc
+default	15:33:46.036885-0500	PinryShareExtension	<SOServiceConnection: 0x1143659e0>: new XPC connection
+default	15:33:46.038151-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.042244-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.042373-0500	PinryShareExtension	Should send trait collection or coordinate space update, interface style 2 -> 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.042481-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Received action(s) for "_UIViewServiceSceneExtension": _UIViewServiceHostAppearanceAction
+default	15:33:46.042798-0500	PinryShareExtension	Appearance transition willAppearAnimated for 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.042828-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Component <_UIViewServiceClientSceneComponent: 0x1142c5c50> handled action(s): <private>
+default	15:33:46.042843-0500	PinryShareExtension	handleKeyboardChange: set currentKeyboard:N (wasKeyboard:N)
+default	15:33:46.042860-0500	PinryShareExtension	forceReloadInputViews
+default	15:33:46.042876-0500	PinryShareExtension	Reloading input views for key-window scene responder: <(null): 0x0; > force:Y
+default	15:33:46.043025-0500	PinryShareExtension	isWritingToolsHandlingKeyboardTracking:Y (WT ready:Y, Arbiter ready:Y)
+default	15:33:46.043080-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Received action(s): _UISceneHostingViewAppearanceActionHostToClient
+default	15:33:46.043442-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.043580-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.043618-0500	PinryShareExtension	Received state update for 19926 (xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}, running-active-NotVisible
+default	15:33:46.043629-0500	PinryShareExtension	Not push traits update to screen for new style 0, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.044388-0500	hangtracerd	Initialization complete now watching hangs for PinryShareExtension(19926) | UIKit-runloop
+default	15:33:46.044461-0500	PinryShareExtension	Adding pencil squeeze interaction: 0x114ca83c0, to view: <private>
+default	15:33:46.044787-0500	PinryShareExtension	Installing interaction on view: <private>, scene: <private>
+default	15:33:46.045269-0500	PinryShareExtension	Initializing NSHTTPCookieStorage singleton
+default	15:33:46.045280-0500	PinryShareExtension	Initializing CFHTTPCookieStorage singleton
+default	15:33:46.045293-0500	PinryShareExtension	Creating default cookie storage with default identifier
+default	15:33:46.045315-0500	PinryShareExtension	Update UI, visible: NO, squeeze: 0x0, hover pose: <private> custom hover point: 0x0, window: <private>, scene: <private>
+default	15:33:46.045588-0500	PinryShareExtension	Interaction moved to a view. Should be active: On
+default	15:33:46.045645-0500	PinryShareExtension	Requesting container lookup; class = 13, identifier = <private>, group_identifier = <private>, create = 1, temp = 0, euid = 501, uid = 501
+default	15:33:46.045707-0500	PinryShareExtension	Realizing settings extension SBUISecureRenderingSettingsExtension on FBSSceneSettings
+default	15:33:46.045794-0500	PinryShareExtension	Not push traits update to screen for new style 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.045808-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.045831-0500	PinryShareExtension	Scene did update interface style to 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.045839-0500	PinryShareExtension	Push traits update to screen for new style 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.046180-0500	PinryShareExtension	_container_query_get_result_at_index: success
+default	15:33:46.046211-0500	PinryShareExtension	container_system_group_path_for_identifier: success
+default	15:33:46.046253-0500	PinryShareExtension	enhancedWindowingModeChangeNotification: NSConcreteNotification 0x114cc0c00 {name = _UIWindowSceneEnhancedWindowingModeChanged; object = <_UIHostedWindowScene: 0x114184780; role: UISceneSessionRoleSceneHosting; persistentIdentifier: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773; activationState: UISceneActivationStateForegroundActive>} info: (null) received by <UIKeyboardVisualModeManager: 0x11407b360>
+default	15:33:46.046260-0500	PinryShareExtension	VisualModeManager <UIKeyboardVisualModeManager: 0x11407b360> observedEnhancedWindowingModeEnabledDidChange 1
+default	15:33:46.046272-0500	PinryShareExtension	visualMode 0 -> 1
+default	15:33:46.046314-0500	PinryShareExtension	VisualModeManager <UIKeyboardVisualModeManager: 0x11407b360> didChangeToMode 1, reloading keyboard
+default	15:33:46.046339-0500	PinryShareExtension	forceReloadInputViews
+default	15:33:46.046380-0500	PinryShareExtension	Reloading input views for key-window scene responder: <(null): 0x0; > force:Y
+default	15:33:46.046600-0500	PinryShareExtension	Initializing AlternativeServices Storage singleton
+default	15:33:46.046652-0500	PinryShareExtension	Not push traits update to screen for new style 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:46.046735-0500	PinryShareExtension	kExcludedFromBackupXattrName set on path: <private>
+default	15:33:46.046823-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.046943-0500	backboardd	Connection added: IOHIDEventSystemConnection uuid:A8F6B2CA-D753-4455-99C2-573A84B9EA2F pid:19926 process:PinryShareExtension type:Passive entitlements:0x0 caller:PencilKit: <redacted> + 108 attributes:(null) state:0x0 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+error	15:33:46.046972-0500	backboardd	ignoring connection; bundleID is missing (or invalid) from the attributes: IOHIDEventSystemConnection uuid:A8F6B2CA-D753-4455-99C2-573A84B9EA2F pid:19926 process:PinryShareExtension type:Passive entitlements:0x0 caller:PencilKit: <redacted> + 108 attributes:(null) state:0x0 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+default	15:33:46.047075-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.047535-0500	PinryShareExtension	Released connection: A8F6B2CA-D753-4455-99C2-573A84B9EA2F
+{
+    UUID = "A8F6B2CA-D753-4455-99C2-573A84B9EA2F";
+    caller = "PencilKit: <redacted> + 108";
+    dispatchQueue = 0;
+    eventCount = 0;
+    eventMask = 0;
+    port = 46083;
+    resetCount = 0;
+    runloop = 0;
+    services =     (
+        4294969649
+    );
+    virtualServices =     (
+    );
+}
+default	15:33:46.047591-0500	PinryShareExtension	Connection 0: creating secure tcp or quic connection
+default	15:33:46.047629-0500	PinryShareExtension	Connection 1: enabling TLS
+default	15:33:46.047635-0500	PinryShareExtension	Connection 1: starting, TC(0x0)
+default	15:33:46.047650-0500	PinryShareExtension	[C1 70550C53-7DD7-49B1-96FE-EB95419D0900 Hostname#2892a307:443 quic-connection, url hash: 012c4916, definite, attribution: developer, context: com.apple.CFNetwork.NSURLSession.{3DD0D1D5-5E76-4AD4-B28F-0569047A4288}{(null)}{Y}{2}{0x0} (private), proc: D715B59B-274A-3928-AA96-4864894B382F, delegated upid: 0] start
+default	15:33:46.047673-0500	backboardd	Connection removed: IOHIDEventSystemConnection uuid:A8F6B2CA-D753-4455-99C2-573A84B9EA2F pid:19926 process:PinryShareExtension type:Passive entitlements:0x0 caller:PencilKit: <redacted> + 108 attributes:(null) state:0x1 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+default	15:33:46.047765-0500	PinryShareExtension	[C1 Hostname#2892a307:443 initial parent-flow ((null))] event: path:start @0.000s
+default	15:33:46.048147-0500	PinryShareExtension	[C1 Hostname#2892a307:443 waiting parent-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: path:satisfied @0.001s, uuid: AA26376A-4338-4403-B960-14A085ADB04A
+default	15:33:46.048191-0500	PinryShareExtension	[C1 Hostname#2892a307:443 in_progress parent-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:start_connect @0.001s
+default	15:33:46.048197-0500	PinryShareExtension	nw_connection_report_state_with_handler_on_nw_queue [C1] reporting state preparing
+default	15:33:46.048224-0500	PinryShareExtension	[C1 Hostname#2892a307:443 in_progress parent-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:start_child @0.001s
+default	15:33:46.048259-0500	PinryShareExtension	[C1.1 Hostname#2892a307:443 initial path ((null))] event: path:start @0.001s
+default	15:33:46.048310-0500	PinryShareExtension	[C1.1 Hostname#2892a307:443 waiting path (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: path:satisfied @0.001s, uuid: AA26376A-4338-4403-B960-14A085ADB04A
+default	15:33:46.048333-0500	PinryShareExtension	[C1.1 Hostname#2892a307:443 in_progress transform (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: transform:start @0.001s
+default	15:33:46.048369-0500	PinryShareExtension	[C1.1.1 Hostname#2892a307:443 initial path ((null))] event: path:start @0.001s
+default	15:33:46.048513-0500	PinryShareExtension	[C1.1.1 Hostname#2892a307:443 waiting path (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: path:satisfied @0.002s, uuid: 9D9C1A7B-02ED-4029-9A6C-F00A13FB9293
+default	15:33:46.048543-0500	PinryShareExtension	[C1.1.1 Hostname#2892a307:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: resolver:start_dns @0.002s
+default	15:33:46.048557-0500	PinryShareExtension	[0x11434f840] activating connection: mach=true listener=false peer=false name=com.apple.dnssd.service
+default	15:33:46.048562-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> setting up Connection 1
+default	15:33:46.049051-0500	PinryShareExtension	nw_endpoint_resolver_update [C1.1.1 Hostname#2892a307:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] Adding endpoint handler for IPv4#6edd1460:443
+default	15:33:46.049092-0500	PinryShareExtension	[C1.1.1 Hostname#2892a307:443 in_progress resolver (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: resolver:receive_dns @0.003s
+default	15:33:46.049146-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 initial path ((null))] event: path:start @0.003s
+default	15:33:46.049267-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 waiting path (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: path:satisfied @0.004s, uuid: 5D99CAFF-B168-4523-A14C-32E166974CD1
+default	15:33:46.049302-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 in_progress channel-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:start_nexus @0.004s
+default	15:33:46.049470-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 in_progress channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:receive_nexus @0.004s
+default	15:33:46.049541-0500	PinryShareExtension	user_tcp_init_all_block_invoke g_tcp_nw_assert_context is false value -1
+default	15:33:46.049614-0500	kernel	SK[7]: __channel_open                 PinryShareExtens(19926) nx_port 12 fd 11 fsw_en0[12]_PinryShareExtension.19926
+default	15:33:46.049685-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 in_progress channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:start_connect @0.004s
+default	15:33:46.049770-0500	PinryShareExtension	tcp_output [C1.1.1.1:3] flags=[SEC] seq=3500822363, ack=0, win=65535 state=SYN_SENT rcv_nxt=0, snd_una=3500822363
+default	15:33:46.051665-0500	PinryShareExtension	Garbage collection for alternative services
+default	15:33:46.069669-0500	PinryShareExtension	Unsetting the global parent activity (null)
+default	15:33:46.069674-0500	PinryShareExtension	Unset the global parent activity
+default	15:33:46.136603-0500	PinryShareExtension	Received state update for 19926 (xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}, running-active-NotVisible
+default	15:33:46.151586-0500	PinryShareExtension	tcp_input [C1.1.1.1:3] flags=[S.E] seq=989907602, ack=3500822364, win=65160 state=SYN_SENT rcv_nxt=0, snd_una=3500822363
+default	15:33:46.151622-0500	PinryShareExtension	nw_flow_connected [C1.1.1.1 IPv4#6edd1460:443 in_progress channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] Transport protocol connected (tcp)
+default	15:33:46.151751-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 in_progress channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:finish_transport @0.108s
+default	15:33:46.151957-0500	PinryShareExtension	boringssl_session_apply_protocol_options_for_transport_block_invoke_2(2280) [C1.1.1.1:2][0x11423b760] TLS configured [min_version(0x0303) max_version(0x0304) name(redacted) tickets(false) false_start(false) enforce_ev(false) enforce_ats(false) ats_non_pfs_ciphersuite_allowed(false) ech(false) pqtls(true), pake(false)]
+default	15:33:46.151976-0500	PinryShareExtension	boringssl_context_info_handler(2377) [C1.1.1.1:2][0x11423b760] Client handshake started
+default	15:33:46.152132-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS client enter_early_data
+default	15:33:46.152158-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS client read_server_hello
+default	15:33:46.319895-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_hello_retry_request
+default	15:33:46.319956-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_server_hello
+default	15:33:46.320297-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_encrypted_extensions
+default	15:33:46.321217-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_certificate_request
+default	15:33:46.321518-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_server_certificate
+default	15:33:46.321551-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_server_certificate_verify
+default	15:33:46.321888-0500	PinryShareExtension	boringssl_context_evaluate_trust_async(1820) [C1.1.1.1:2][0x11423b760] Performing external trust evaluation
+default	15:33:46.322102-0500	PinryShareExtension	boringssl_context_evaluate_trust_async_external(1805) [C1.1.1.1:2][0x11423b760] Asyncing for external verify block
+default	15:33:46.322299-0500	PinryShareExtension	Connection 1: asked to evaluate TLS Trust
+default	15:33:46.324348-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> auth completion disp=1 cred=0x0
+default	15:33:46.324784-0500	PinryShareExtension	(Trust 0x1140c1c80) No pending evals, starting
+default	15:33:46.324826-0500	PinryShareExtension	System Keychain Always Supported set via feature flag to disabled
+default	15:33:46.324865-0500	PinryShareExtension	[0x11434e580] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+default	15:33:46.325200-0500	PinryShareExtension	[0x11434e800] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+default	15:33:46.325464-0500	PinryShareExtension	(Trust 0x1140c1c80) Completed async eval kickoff
+default	15:33:46.330692-0500	PinryShareExtension	(Trust 0x1140c1c80) trustd returned 4
+default	15:33:46.330719-0500	PinryShareExtension	System Trust Evaluation yielded status(0)
+default	15:33:46.330735-0500	PinryShareExtension	(Trust 0x1140c18c0) No pending evals, starting
+default	15:33:46.330924-0500	PinryShareExtension	[0x11434fc00] activating connection: mach=true listener=false peer=false name=com.apple.trustd
+default	15:33:46.331213-0500	PinryShareExtension	(Trust 0x1140c18c0) Completed async eval kickoff
+default	15:33:46.331324-0500	PinryShareExtension	[0x11434e800] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+default	15:33:46.334655-0500	PinryShareExtension	(Trust 0x1140c18c0) trustd returned 4
+default	15:33:46.334846-0500	PinryShareExtension	Connection 1: TLS Trust result 0
+default	15:33:46.334861-0500	PinryShareExtension	boringssl_context_evaluate_trust_async_external_block_invoke_3(1760) [C1.1.1.1:2][0x11423b760] Returning from external verify block with result: true
+default	15:33:46.334888-0500	PinryShareExtension	boringssl_context_certificate_verify_callback(2001) [C1.1.1.1:2][0x11423b760] Certificate verification result: OK
+default	15:33:46.334899-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client read_server_finished
+default	15:33:46.335005-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client send_end_of_early_data
+default	15:33:46.335016-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client send_client_encrypted_extensions
+default	15:33:46.335138-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client send_client_certificate
+default	15:33:46.335149-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client complete_second_flight
+default	15:33:46.335181-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS 1.3 client done
+default	15:33:46.335269-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS client finish_client_handshake
+default	15:33:46.335279-0500	PinryShareExtension	boringssl_context_info_handler(2394) [C1.1.1.1:2][0x11423b760] Client handshake state: TLS client done
+default	15:33:46.335288-0500	PinryShareExtension	boringssl_context_info_handler(2383) [C1.1.1.1:2][0x11423b760] Client handshake done
+default	15:33:46.335609-0500	PinryShareExtension	nw_protocol_boringssl_signal_connected(778) [C1.1.1.1:2][0x11423b760] TLS connected [server(0) version(0x0304) ciphersuite(TLS_AES_256_GCM_SHA384) group(0x001d) signature_alg(0x0804) alpn(http/1.1) resumed(0) offered_ticket(0) in_early_data(0) early_data_accepted(0) false_started(0) ocsp_received(0) sct_received(0) connect_time(184ms) flight_time(166ms) rtt(164ms) write_stalls(0) read_stalls(4) pake(0x0000)]
+default	15:33:46.335735-0500	PinryShareExtension	nw_flow_connected [C1.1.1.1 IPv4#6edd1460:443 in_progress channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] Output protocol connected (CFNetworkConnection-3905853996)
+default	15:33:46.335824-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 ready channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:child_finish_connect @0.292s
+default	15:33:46.335937-0500	PinryShareExtension	[C1.1.1 Hostname#2892a307:443 ready resolver (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:child_finish_connect @0.292s
+default	15:33:46.335980-0500	PinryShareExtension	[C1.1 Hostname#2892a307:443 ready transform (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:child_finish_connect @0.292s
+default	15:33:46.336019-0500	PinryShareExtension	[C1.1.1.1 IPv4#6edd1460:443 ready channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:changed_viability @0.293s
+default	15:33:46.336112-0500	PinryShareExtension	[C1.1.1 Hostname#2892a307:443 ready resolver (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:changed_viability @0.293s
+default	15:33:46.336159-0500	PinryShareExtension	[C1.1 Hostname#2892a307:443 ready transform (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:changed_viability @0.293s
+default	15:33:46.336175-0500	PinryShareExtension	nw_flow_connected [C1 IPv4#6edd1460:443 in_progress parent-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] Output protocol connected (endpoint_flow)
+default	15:33:46.336199-0500	PinryShareExtension	[C1 IPv4#6edd1460:443 ready parent-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:finish_connect @0.293s
+default	15:33:46.336328-0500	PinryShareExtension	nw_connection_report_state_with_handler_on_nw_queue [C1] reporting state ready
+default	15:33:46.336338-0500	PinryShareExtension	[C1 IPv4#6edd1460:443 ready parent-flow (satisfied (Path is satisfied), interface: en0[802.11], ipv4, dns, uses wifi, LQM: good)] event: flow:changed_viability @0.293s
+default	15:33:46.336344-0500	PinryShareExtension	nw_connection_send_viability_changed_on_nw_queue [C1] viability_changed_handler(true)
+default	15:33:46.336357-0500	PinryShareExtension	[0x11434fc00] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+default	15:33:46.336386-0500	PinryShareExtension	Connection 1: connected successfully
+default	15:33:46.336411-0500	PinryShareExtension	Connection 1: TLS handshake complete
+default	15:33:46.336639-0500	PinryShareExtension	Connection 1: ready C(N) E(N)
+default	15:33:46.336760-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> now using Connection 1
+default	15:33:46.336808-0500	PinryShareExtension	Connection 1: received viability advisory(Y)
+default	15:33:46.337430-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> sent request, body S 298
+default	15:33:46.482567-0500	PinryShareExtension	Smart invert app status cached: (null)
+default	15:33:46.544421-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Received action(s) for "_UIViewServiceSceneExtension": _UIViewServiceHostAppearanceAction
+default	15:33:46.544452-0500	PinryShareExtension	Appearance transition didAppear for 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:46.544576-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Component <_UIViewServiceClientSceneComponent: 0x1142c5c50> handled action(s): <private>
+default	15:33:46.631439-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> received response, status 201 content K
+default	15:33:46.632230-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> response ended
+default	15:33:46.632350-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> done using Connection 1
+default	15:33:46.632496-0500	PinryShareExtension	[C1] event: client:connection_idle @0.589s
+default	15:33:46.632560-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> summary for task success {transaction_duration_ms=601, response_status=201, connection=1, protocol="http/1.1", domain_lookup_duration_ms=1, connect_duration_ms=289, secure_connection_duration_ms=184, private_relay=false, request_start_ms=306, request_duration_ms=0, response_start_ms=599, response_duration_ms=1, request_bytes=733, request_throughput_kbps=13359, response_bytes=1740, response_throughput_kbps=7995, cache_hit=false}
+default	15:33:46.632586-0500	PinryShareExtension	nw_protocol_tcp_notify [C1.1.1.1:3] nw_protocol_notification_type_connection_idle is true
+default	15:33:46.632687-0500	PinryShareExtension	nw_protocol_tcp_set_connection_idle [C1.1.1.1:3] os_nexus_flow_set_connection_idle returned 0
+default	15:33:46.632715-0500	PinryShareExtension	[C1] event: client:connection_idle @0.589s
+default	15:33:46.632755-0500	PinryShareExtension	nw_protocol_tcp_notify [C1.1.1.1:3] nw_protocol_notification_type_connection_idle is true
+default	15:33:46.632766-0500	PinryShareExtension	nw_protocol_tcp_set_connection_idle [C1.1.1.1:3] os_nexus_flow_set_connection_idle returned 0
+default	15:33:46.632860-0500	PinryShareExtension	[0x11434ee40] activating connection: mach=true listener=false peer=false name=com.apple.analyticsd
+default	15:33:46.633583-0500	PinryShareExtension	Task <FDAA0969-2821-4F00-8102-690FC7AE9DCF>.<1> finished successfully
+default	15:33:48.733907-0500	PinryShareExtension	preparing to call _completeRequestReturningItems:forExtensionContextWithUUID: UUID: F62BCED1-6685-45DE-903C-2432DD624816
+default	15:33:48.734261-0500	PinryShareExtension	call _completeRequestReturningItems:forExtensionContextWithUUID:
+default	15:33:48.740102-0500	PinryShareExtension	calling out to _completeRequestReturningItemsSecondHalf
+default	15:33:48.740118-0500	PinryShareExtension	in _NSExtensionCompleteRequestReturningItemsContinuation
+default	15:33:48.740297-0500	PinryShareExtension	[0x114180a80] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+default	15:33:48.749764-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.754199-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.754806-0500	PinryShareExtension	Not push traits update to screen for new style 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:48.755472-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.757824-0500	PinryShareExtension	Should send trait collection or coordinate space update, interface style 2 -> 2, <_UIHostedWindowScene: 0x114184780> (UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773)
+default	15:33:48.758168-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Received action(s) for "_UIViewServiceSceneExtension": _UIViewServiceHostAppearanceAction
+default	15:33:48.758289-0500	PinryShareExtension	Appearance transition willDisappearAnimated for 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.758306-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Component <_UIViewServiceClientSceneComponent: 0x1142c5c50> handled action(s): <private>
+default	15:33:48.758312-0500	PinryShareExtension	[UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773] Received action(s): _UISceneHostingViewAppearanceActionHostToClient
+default	15:33:48.758476-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.759232-0500	PinryShareExtension	sceneOfRecord: sceneID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773  persistentID: UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.777985-0500	PinryShareExtension	[0x114103bf0] End local event deferring requested for token: 0x114047120; environments: 1; reason: _UIHostedWindowScene: 0x114184780: end event deferring for scene invalidation
+default	15:33:48.778812-0500	PinryShareExtension	[0x114103bf0] Removing all event deferring rules for reason: _UIEventDeferringManager: 0x114103bf0: removing all deferring rules due to scene invalidation: 0x114184780
+default	15:33:48.778826-0500	PinryShareExtension	Scene will invalidate: _UIHostedWindowScene: 0x114184780; scene identity: 19369->xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}/UISceneHosting-org.mozilla.ios.Firefox:UIHostedScene-com.example.pinrysaver.shareextension-D848023A-F531-4B6B-81DC-2D5D81A6B773
+default	15:33:48.779658-0500	PinryShareExtension	Key window needs update: 1; currentKeyWindowScene: 0x114184780; evaluatedKeyWindowScene: 0x0; currentApplicationKeyWindow: 0x1140bc000; evaluatedApplicationKeyWindow: 0x0; reason: _UIHostedWindowScene: 0x114184780: Window scene was invalidated
+default	15:33:48.779958-0500	PinryShareExtension	Window did become application key: (nil): 0x0; contextId: 0x0; scene identity: (nil)
+default	15:33:48.780308-0500	PinryShareExtension	Resetting home affordance notifier: <_UIHomeAffordanceSceneNotifier: 0x114103aa0; observers.count: 3>; for invalidating scene: <_UIHostedWindowScene: 0x114184780>
+default	15:33:48.780348-0500	PinryShareExtension	Enqueuing clear events of window: <UIWindow: 0x1140bc000>; contextId: 0x0
+default	15:33:48.780355-0500	PinryShareExtension	Performing clear events of window: <UIWindow: 0x1140bc000>; contextId: 0x0
+default	15:33:48.780386-0500	PinryShareExtension	Enqueuing clear events of window: <UITextEffectsWindow: 0x114240500>; contextId: 0x0
+default	15:33:48.780514-0500	PinryShareExtension	Performing clear events of window: <UITextEffectsWindow: 0x114240500>; contextId: 0x0
+default	15:33:48.780539-0500	PinryShareExtension	Enqueuing clear events of window: <_UIWindowSystemOverlayWindow: 0x1140bd400>; contextId: 0x0
+default	15:33:48.780556-0500	PinryShareExtension	Performing clear events of window: <_UIWindowSystemOverlayWindow: 0x1140bd400>; contextId: 0x0
+default	15:33:48.784121-0500	PinryShareExtension	sceneOfRecord: sceneID: (null)  persistentID: (null)
+default	15:33:48.784141-0500	PinryShareExtension	Deactivation reason added: 12; deactivation reasons: 0 -> 4096; animating application lifecycle event: 0
+default	15:33:48.784301-0500	PinryShareExtension	App transitioned to background, suspending HangTracing.
+default	15:33:48.784307-0500	PinryShareExtension	App with bundleID:com.example.pinrysaver.shareextension is no longer foreground at time=6831565078526, attempting to emit telemetry with emission type: HTFGUpdateAppBackgrounded
+default	15:33:48.784353-0500	PinryShareExtension	Deactivation reason added: 11; deactivation reasons: 4096 -> 6144; animating application lifecycle event: 0
+default	15:33:48.784359-0500	PinryShareExtension	Will add backgroundTask with taskName: <private>, expirationHandler: (null)
+default	15:33:48.784564-0500	PinryShareExtension	Creating new assertion because there is no existing background assertion.
+default	15:33:48.784667-0500	PinryShareExtension	Creating new background assertion
+default	15:33:48.784682-0500	PinryShareExtension	Created new background assertion <BKSProcessAssertion: 0x1143c01e0>
+default	15:33:48.784730-0500	PinryShareExtension	Incrementing reference count for background assertion <private>
+default	15:33:48.784744-0500	PinryShareExtension	Created background task <private>.
+default	15:33:48.784765-0500	PinryShareExtension	com.example.pinrysaver.shareextension(19926) invalidateConnection (appDidSuspend)
+default	15:33:48.784785-0500	PinryShareExtension	[0x1140fbac0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+default	15:33:48.784828-0500	PinryShareExtension	Will add backgroundTask with taskName: <private>, expirationHandler: <__NSMallocBlock__: 0x114cf7300>
+default	15:33:48.784848-0500	PinryShareExtension	Reusing background assertion <BKSProcessAssertion: 0x1143c01e0>
+default	15:33:48.784854-0500	PinryShareExtension	Incrementing reference count for background assertion <private>
+default	15:33:48.784866-0500	PinryShareExtension	Created background task <private>.
+default	15:33:48.784873-0500	PinryShareExtension	Ending background task with UIBackgroundTaskIdentifier: 3
+default	15:33:48.784892-0500	PinryShareExtension	Ending task with identifier 3 and description: <private>, _expireHandler: <__NSMallocBlock__: 0x114cf7300>
+default	15:33:48.784945-0500	PinryShareExtension	Decrementing reference count for assertion <private> (used by background task with identifier 3: <private>)
+default	15:33:48.785027-0500	PinryShareExtension	Will add backgroundTask with taskName: <private>, expirationHandler: <__NSMallocBlock__: 0x114cf7300>
+default	15:33:48.785064-0500	PinryShareExtension	Reusing background assertion <BKSProcessAssertion: 0x1143c01e0>
+default	15:33:48.785103-0500	PinryShareExtension	Incrementing reference count for background assertion <private>
+default	15:33:48.785155-0500	PinryShareExtension	Created background task <private>.
+default	15:33:48.785167-0500	PinryShareExtension	Ending background task with UIBackgroundTaskIdentifier: 4
+default	15:33:48.785180-0500	PinryShareExtension	Ending task with identifier 4 and description: <private>, _expireHandler: <__NSMallocBlock__: 0x114cf7300>
+default	15:33:48.785201-0500	PinryShareExtension	Decrementing reference count for assertion <private> (used by background task with identifier 4: <private>)
+default	15:33:48.785248-0500	PinryShareExtension	Will add backgroundTask with taskName: <private>, expirationHandler: <__NSMallocBlock__: 0x114cf7300>
+default	15:33:48.785271-0500	PinryShareExtension	Reusing background assertion <BKSProcessAssertion: 0x1143c01e0>
+default	15:33:48.785330-0500	PinryShareExtension	Incrementing reference count for background assertion <private>
+default	15:33:48.785855-0500	PinryShareExtension	Created background task <private>.
+default	15:33:48.785890-0500	PinryShareExtension	Ending background task with UIBackgroundTaskIdentifier: 5
+default	15:33:48.785896-0500	PinryShareExtension	Ending task with identifier 5 and description: <private>, _expireHandler: <__NSMallocBlock__: 0x114cf7300>
+default	15:33:48.785907-0500	PinryShareExtension	Decrementing reference count for assertion <private> (used by background task with identifier 5: <private>)
+default	15:33:48.785917-0500	PinryShareExtension	[0x114345110] Initialized with scene: <_UIHostedWindowScene: 0x114184780>; behavior: <_UIEventDeferringBehavior_iOS: 0x114cfc300>; availableForProcess: 1, systemShellManagesKeyboardFocus: 1
+default	15:33:48.785932-0500	PinryShareExtension	Target list changed:
+default	15:33:48.786458-0500	PinryShareExtension	Ending background task with UIBackgroundTaskIdentifier: 2
+default	15:33:48.786478-0500	PinryShareExtension	Ending task with identifier 2 and description: <private>, _expireHandler: (null)
+default	15:33:48.786506-0500	PinryShareExtension	Decrementing reference count for assertion <private> (used by background task with identifier 2: <private>)
+default	15:33:48.786535-0500	PinryShareExtension	Will invalidate assertion: <BKSProcessAssertion: 0x1143c01e0> for task identifier: 2
+default	15:33:48.792534-0500	PinryShareExtension	Received configuration update from daemon (initial)
+default	15:33:48.882613-0500	PinryShareExtension	Received state update for 19926 (xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}, running-active-NotVisible
+default	15:33:51.633750-0500	PinryShareExtension	tcp_input [C1.1.1.1:3] flags=[F.] seq=989912703, ack=3500824750, win=501 state=ESTABLISHED rcv_nxt=989912703, snd_una=3500824750
+default	15:33:51.633862-0500	PinryShareExtension	nw_protocol_tcp_log_summary [C1.1.1.1:3] 
+	[6837D7B7-C4F7-4483-BDA1-F4D597C6E5C8 <private>:61788<-><private>:443]
+	Init: 1, Conn_Time: 103.654ms, SYNs: 1, WR_T: 0/0, RD_T: 0/0, TFO: 0/0/0, ECN: 0/1/1, Accurate ECN (client/server): Disabled/Disabled, TS: 1, TSO: 0
+	rtt_cache: kernel, rtt_upd: 4, rtt: 96.562ms, rtt_var: 32.937ms rtt_nc: 96.562ms, rtt_var_nc: 32.937ms base rtt: 80ms
+	ACKs-compressed: 0, ACKs delayed: 0 delayed ACKs sent: 0
+default	15:33:51.634085-0500	PinryShareExtension	Connection 1: read-side closed
+default	15:33:51.634169-0500	PinryShareExtension	Connection 1: cleaning up
+default	15:33:51.634522-0500	PinryShareExtension	[C1 70550C53-7DD7-49B1-96FE-EB95419D0900 Hostname#2892a307:443 quic-connection, url hash: 012c4916, definite, attribution: developer] cancel
+default	15:33:51.636565-0500	PinryShareExtension	[C1 70550C53-7DD7-49B1-96FE-EB95419D0900 Hostname#2892a307:443 quic-connection, url hash: 012c4916, definite, attribution: developer] cancelled
+	[C1.1.1.1 5D99CAFF-B168-4523-A14C-32E166974CD1 192.168.86.32:61788<->IPv4#6edd1460:443]
+	Connected Path: satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi, LQM: good
+	Privacy Stance: Not Eligible
+	Duration: 5.593s, DNS @0.002s took 0.001s, TCP @0.004s took 0.104s, TLS 1.3 took 0.184s
+	bytes in/out: 5100/3834, packets in/out: 10/12, rtt: 0.096s, retransmitted bytes: 1448, out-of-order bytes: 0
+	ecn packets sent/acked/marked/lost: 5/3/0/1
+default	15:33:51.637371-0500	PinryShareExtension	nw_connection_report_state_with_handler_on_nw_queue [C1] reporting state cancelled
+default	15:33:51.637453-0500	PinryShareExtension	tcp_output [C1.1.1.1:3] flags=[F.] seq=3500824774, ack=989912704, win=2048 state=LAST_ACK rcv_nxt=989912704, snd_una=3500824750
+default	15:33:54.115372-0500	PinryShareExtension	Received state update for 19926 (xpcservice<com.example.pinrysaver.shareextension([app<org.mozilla.ios.Firefox(37EB2581-EC6A-4D49-8BC7-08A93418A3F3)>:19369])>{vt hash: 0}, running-active-NotVisible

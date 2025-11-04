@@ -108,10 +108,7 @@ struct SettingsView: View {
         let settings = PinrySettings.load()
         pinryBaseURL = settings.pinryBaseURL
         defaultBoardID = settings.defaultBoardID
-        
-        // Load API token from settings
         apiToken = settings.apiToken
-        NSLog("SettingsView: Loaded API token from settings, length: \(settings.apiToken.count)")
     }
     
     private func saveSettings() {
@@ -121,16 +118,13 @@ struct SettingsView: View {
             return
         }
         
-        // Save all settings including API token to UserDefaults
         var settings = PinrySettings.shared
         settings.pinryBaseURL = pinryBaseURL.trimmingCharacters(in: .whitespacesAndNewlines)
         settings.defaultBoardID = defaultBoardID.trimmingCharacters(in: .whitespacesAndNewlines)
         settings.apiToken = apiToken.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        NSLog("SettingsView: Attempting to save API token as plaintext, length: \(settings.apiToken.count)")
         PinrySettings.save(settings)
-        PinrySettings.invalidateCache() // Ensure share extension gets fresh data
-        NSLog("SettingsView: All settings saved to UserDefaults successfully")
+        PinrySettings.invalidateCache()
         showAlert("Settings saved successfully!")
     }
     
