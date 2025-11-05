@@ -91,6 +91,10 @@ struct ImageGalleryView: View {
                                     if pin.id == pins.last?.id && hasMore && !isLoading {
                                         loadMorePins()
                                     }
+                                    // Check for new pins when scrolling back to top
+                                    if index == 0 && !isLoading {
+                                        checkForNewPins()
+                                    }
                                 }
                             }
                             .padding(.horizontal, 12)
@@ -112,6 +116,9 @@ struct ImageGalleryView: View {
                             }
                         }
                         .padding(.bottom, 20)
+                    }
+                    .refreshable {
+                        await refreshPins()
                     }
                     .ignoresSafeArea()
                     .onChange(of: scrollToTop) { _, _ in
@@ -227,6 +234,77 @@ struct ImageGalleryView: View {
                     errorMessage = result.error
                 }
             }
+        }
+    }
+    
+    private func refreshPins() async {
+        // Reload all currently loaded pins (or at least 20)
+        let currentCount = max(pins.count, 20)
+        let result = await PinryFetcher.shared.fetchPins(offset: 0, limit: currentCount)
+        
+        if result.success {
+            pins = result.pins
+            thumbnailCache.removeAll()
+            hasMore = result.hasMore
+            errorMessage = nil
+        } else {
+            errorMessage = result.error
+        }
+    }
+    
+    private func checkForNewPins() {
+        guard !pins.isEmpty else { return }
+        
+        Task {
+            // Fetch just the first pin to see if there are new ones
+            let result = await PinryFetcher.shared.fetchPins(offset: 0, limit: 1)
+            
+            await MainActor.run {
+                if result.success, let firstNewPin = result.pins.first {
+                    // If the first pin from server is different from our first pin, prepend new ones
+                    if firstNewPin.id != pins.first?.id {
+                        // Fetch all new pins up to our current first pin
+                        Task {
+                            await loadNewPinsFromTop()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadNewPinsFromTop() async {
+        guard let currentFirstPinId = pins.first?.id else { return }
+        
+        // Fetch pins until we find our current first pin
+        var offset = 0
+        var newPins: [PinryPinDetail] = []
+        
+        while true {
+            let result = await PinryFetcher.shared.fetchPins(offset: offset, limit: 20)
+            
+            guard result.success else { break }
+            
+            // Find where our current first pin appears in the results
+            if let indexOfCurrentFirst = result.pins.firstIndex(where: { $0.id == currentFirstPinId }) {
+                // Add only the new pins before our current first
+                newPins.append(contentsOf: result.pins.prefix(indexOfCurrentFirst))
+                break
+            } else {
+                // Haven't found our current first yet, add all these pins
+                newPins.append(contentsOf: result.pins)
+                offset += 20
+                
+                // Safety limit: don't fetch more than 100 new pins
+                if newPins.count >= 100 {
+                    break
+                }
+            }
+        }
+        
+        // Prepend new pins to the beginning
+        if !newPins.isEmpty {
+            pins.insert(contentsOf: newPins, at: 0)
         }
     }
 }
@@ -630,6 +708,7 @@ struct PinThumbnailView: View {
                         .aspectRatio(thumbnailAspectRatio, contentMode: .fit)
                         .overlay(
                             PinryLoadingView(size: 64, desaturated: true, animated: false)
+                                .rotationEffect(.degrees(pin.id % 2 == 0 ? 45 : -45))
                         )
                     
                     AsyncImage(url: url) { phase in
