@@ -176,7 +176,13 @@ struct ImageGalleryView: View {
                     isPresented: Binding(
                         get: { selectedPinIndex != nil },
                         set: { if !$0 { selectedPinIndex = nil } }
-                    )
+                    ),
+                    onNearEnd: {
+                        // Load more pins when swiping near the end in fullscreen
+                        if hasMore && !isLoading {
+                            loadMorePins()
+                        }
+                    }
                 )
             }
         }
@@ -427,6 +433,7 @@ struct FullscreenImageViewer: View {
     @State var currentIndex: Int
     let thumbnailCache: [Int: Image]
     @Binding var isPresented: Bool
+    let onNearEnd: () -> Void
     
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
@@ -530,6 +537,12 @@ struct FullscreenImageViewer: View {
                 .opacity(backgroundOpacity)
             }
         }
+        .onChange(of: currentIndex) { _, newIndex in
+            // Check if we're within the last 3 images, trigger load more
+            if newIndex >= allPins.count - 3 {
+                onNearEnd()
+            }
+        }
     }
 }
 
@@ -629,10 +642,17 @@ struct FullSizeImageView: View {
             }
         }
         .onAppear {
+            // Reset zoom state when image appears
+            scale = 1.0
+            lastScale = 1.0
+            offset = .zero
+            lastOffset = .zero
+            
             if fullSizeImage == nil && !isLoadingFull {
                 loadFullSizeImage()
             }
         }
+        .id(pin.id) // Force fresh view for each image
     }
     
     private func loadFullSizeImage() {
