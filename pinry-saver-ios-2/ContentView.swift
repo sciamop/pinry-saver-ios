@@ -687,6 +687,9 @@ struct PinThumbnailView: View {
     let isSelected: Bool
     let onImageLoaded: ((Image) -> Void)?
     @State private var thumbnailImage: Image? = nil
+    @State private var isLoading = false
+    @State private var loadFailed = false
+    @State private var retryCount = 0
     
     init(pin: PinryPinDetail, isSelected: Bool = false, onImageLoaded: ((Image) -> Void)? = nil) {
         self.pin = pin
@@ -700,7 +703,7 @@ struct PinThumbnailView: View {
                 thumbImg
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-            } else if let thumbnailUrl = pin.image.thumbnail?.url, let url = URL(string: thumbnailUrl) {
+            } else if let thumbnailUrl = pin.image.thumbnail?.url {
                 // Show loader immediately, then load thumbnail
                 ZStack {
                     Rectangle()
@@ -711,17 +714,15 @@ struct PinThumbnailView: View {
                                 .rotationEffect(.degrees(pin.id % 2 == 0 ? 45 : -45))
                         )
                     
-                    AsyncImage(url: url) { phase in
-                        if case .success(let image) = phase {
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .onAppear {
-                                    thumbnailImage = image
-                                    onImageLoaded?(image)
-                                }
-                        }
+                    if loadFailed && retryCount >= 3 {
+                        // Show error after 3 retries
+                        Image(systemName: "exclamationmark.triangle")
+                            .foregroundColor(.red)
+                            .font(.system(size: 32))
                     }
+                }
+                .onAppear {
+                    loadThumbnail(url: thumbnailUrl)
                 }
             } else {
                 Rectangle()
@@ -743,6 +744,49 @@ struct PinThumbnailView: View {
             return CGFloat(width) / CGFloat(height)
         }
         return 1.0
+    }
+    
+    private func loadThumbnail(url: String) {
+        guard thumbnailImage == nil && !isLoading else { return }
+        guard let imageUrl = URL(string: url) else { return }
+        
+        isLoading = true
+        
+        Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(from: imageUrl)
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    throw URLError(.badServerResponse)
+                }
+                
+                if httpResponse.statusCode == 200, let uiImage = UIImage(data: data) {
+                    await MainActor.run {
+                        let image = Image(uiImage: uiImage)
+                        thumbnailImage = image
+                        onImageLoaded?(image)
+                        isLoading = false
+                        loadFailed = false
+                    }
+                } else {
+                    throw URLError(.badServerResponse)
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading = false
+                    loadFailed = true
+                    
+                    // Retry up to 3 times with exponential backoff
+                    if retryCount < 3 {
+                        retryCount += 1
+                        let delay = Double(retryCount) * 0.5 // 0.5s, 1s, 1.5s
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                            loadThumbnail(url: url)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
