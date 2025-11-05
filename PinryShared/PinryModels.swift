@@ -33,19 +33,32 @@ struct PinryPinDetail: Codable, Identifiable {
 }
 
 struct PinryImage: Codable {
+    let id: Int?
+    let image: String?
+    let width: Int?
+    let height: Int?
     let thumbnail: PinryImageSize?
     let square: PinryImageSize?
     let standard: PinryImageSize?
     
     enum CodingKeys: String, CodingKey {
+        case id
+        case image
+        case width
+        case height
         case thumbnail
         case square
         case standard
     }
     
-    // Helper to get the best available image URL
+    // Helper to get the best available thumbnail URL
     var bestImageUrl: String? {
         return thumbnail?.url ?? square?.url ?? standard?.url
+    }
+    
+    // Full-size original image URL
+    var fullSizeUrl: String? {
+        return image
     }
 }
 

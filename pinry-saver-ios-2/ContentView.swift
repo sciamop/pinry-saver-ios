@@ -51,10 +51,13 @@ struct ImageGalleryView: View {
     @State private var hasMore = true
     @State private var errorMessage: String?
     @State private var scrollToTop = false
+    @State private var selectedPinIndex: Int? = nil
+    @State private var thumbnailCache: [Int: Image] = [:]
+    @State private var showGallery = false
     
     var body: some View {
         ZStack(alignment: .top) {
-            // Full screen scroll view
+            // Full screen scroll view (always rendering, but may be hidden)
             ScrollViewReader { scrollProxy in
                 GeometryReader { geometry in
                     let isLandscape = geometry.size.width > geometry.size.height
@@ -72,19 +75,28 @@ struct ImageGalleryView: View {
                                 .frame(height: 60)
                             
                             // Masonry Grid - responsive to orientation
-                            MasonryGrid(pins: pins, spacing: 12, columns: columns) { pin in
-                                PinThumbnailView(pin: pin)
-                                    .onAppear {
-                                        // Load more when near the end
-                                        if pin.id == pins.last?.id && hasMore && !isLoading {
-                                            loadMorePins()
+                            MasonryGrid(pins: pins, spacing: 12, columns: columns) { index, pin in
+                                PinThumbnailView(
+                                    pin: pin,
+                                    isSelected: false,
+                                        onImageLoaded: { image in
+                                            thumbnailCache[pin.id] = image
                                         }
+                                )
+                                .onTapGesture {
+                                    selectedPinIndex = index
+                                }
+                                .onAppear {
+                                    // Load more when near the end
+                                    if pin.id == pins.last?.id && hasMore && !isLoading {
+                                        loadMorePins()
                                     }
+                                }
                             }
                             .padding(.horizontal, 12)
                         
-                            // Loading indicator
-                            if isLoading {
+                            // Loading indicator for pagination
+                            if isLoading && !pins.isEmpty {
                                 ProgressView()
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -109,6 +121,15 @@ struct ImageGalleryView: View {
                     }
                 }
             }
+            .opacity(showGallery ? 1 : 0)
+            .animation(.easeInOut(duration: 0.3), value: showGallery)
+            
+            // Show custom loading screen - fades out when gallery appears
+            PinryLoadingView()
+                .opacity(showGallery ? 0 : 1)
+                .animation(.easeInOut(duration: 0.3), value: showGallery)
+                .allowsHitTesting(!showGallery)
+                .zIndex(10)
             
             // Floating UI elements - fixed at top of screen
             HStack {
@@ -138,10 +159,30 @@ struct ImageGalleryView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 8)
+            
+            // Fullscreen image viewer
+            if let index = selectedPinIndex, index < pins.count {
+                FullscreenImageViewer(
+                    allPins: pins,
+                    currentIndex: index,
+                    thumbnailCache: thumbnailCache,
+                    isPresented: Binding(
+                        get: { selectedPinIndex != nil },
+                        set: { if !$0 { selectedPinIndex = nil } }
+                    )
+                )
+            }
         }
         .onAppear {
             if pins.isEmpty {
                 loadPins()
+                
+                // Show gallery after 3 seconds
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showGallery = true
+                    }
+                }
             }
         }
     }
@@ -190,14 +231,96 @@ struct ImageGalleryView: View {
     }
 }
 
+// MARK: - Pinry Loading View
+struct PinryLoadingView: View {
+    @Environment(\.colorScheme) var colorScheme
+    @State private var yOffset: CGFloat = 0
+    let size: CGFloat
+    let desaturated: Bool
+    let animated: Bool
+    
+    init(size: CGFloat = 256, desaturated: Bool = false, animated: Bool = true) {
+        self.size = size
+        self.desaturated = desaturated
+        self.animated = animated
+    }
+    
+    var body: some View {
+        ZStack {
+            if size >= 200 {
+                Color(uiColor: .systemBackground)
+                    .ignoresSafeArea()
+            }
+            
+            VStack {
+                Spacer()
+                
+                // Pinry logo with motion blur
+                ZStack {
+                    if animated {
+                        // Motion blur trail (3 copies instead of 5)
+                        ForEach(0..<3, id: \.self) { index in
+                            Group {
+                                if desaturated {
+                                    PinryLogo()
+                                        .colorMultiply(colorScheme == .dark ? .white : .black)
+                                } else {
+                                    PinryLogo()
+                                }
+                            }
+                            .frame(width: size, height: size)
+                            .opacity((desaturated ? 0.3 : 1.0) * (1.0 - CGFloat(index) * 0.3))
+                            .offset(y: yOffset - CGFloat(index) * 20)
+                        }
+                    } else {
+                        // Static version (no motion blur)
+                        Group {
+                            if desaturated {
+                                PinryLogo()
+                                    .colorMultiply(colorScheme == .dark ? .white : .black)
+                            } else {
+                                PinryLogo()
+                            }
+                        }
+                        .frame(width: size, height: size)
+                        .opacity(desaturated ? 0.3 : 1.0)
+                    }
+                }
+                .frame(width: size, height: size, alignment: .top)
+                .clipped()
+                .drawingGroup() // Render as a single layer for better performance
+                
+                Spacer()
+            }
+        }
+        .onAppear {
+            if animated {
+                yOffset = -size
+                withAnimation(
+                    .easeInOut(duration: 0.5)
+                    .repeatForever(autoreverses: false)
+                ) {
+                    yOffset = size
+                }
+            }
+        }
+    }
+}
+
+
 // MARK: - Masonry Grid Layout
-struct MasonryGrid<Content: View, T: Identifiable>: View {
-    let pins: [T]
+struct MasonryGrid<Content: View>: View {
+    let pins: [PinryPinDetail]
     let spacing: CGFloat
     let columns: Int
-    let content: (T) -> Content
+    let content: (Int, PinryPinDetail) -> Content
     
-    init(pins: [T], spacing: CGFloat = 12, columns: Int = 2, @ViewBuilder content: @escaping (T) -> Content) {
+    init(
+        pins: [PinryPinDetail],
+        spacing: CGFloat = 12,
+        columns: Int = 2,
+        @ViewBuilder content: @escaping (Int, PinryPinDetail) -> Content
+    ) {
         self.pins = pins
         self.spacing = spacing
         self.columns = columns
@@ -210,7 +333,7 @@ struct MasonryGrid<Content: View, T: Identifiable>: View {
                 LazyVStack(spacing: spacing) {
                     ForEach(Array(pins.enumerated()), id: \.element.id) { index, pin in
                         if index % columns == columnIndex {
-                            content(pin)
+                            content(index, pin)
                         }
                     }
                 }
@@ -220,36 +343,305 @@ struct MasonryGrid<Content: View, T: Identifiable>: View {
     }
 }
 
-// MARK: - Pin Thumbnail View
-struct PinThumbnailView: View {
+// MARK: - Fullscreen Image Viewer
+struct FullscreenImageViewer: View {
+    let allPins: [PinryPinDetail]
+    @State var currentIndex: Int
+    let thumbnailCache: [Int: Image]
+    @Binding var isPresented: Bool
+    
+    @State private var dragOffset: CGFloat = 0
+    @State private var isDragging = false
+    
+    var body: some View {
+        GeometryReader { geometry in
+            let screenHeight = geometry.size.height
+            let dragProgress = min(max(dragOffset / screenHeight, 0), 1)
+            let dismissThreshold: CGFloat = 0.125
+            let scale = 1.0 - (dragProgress * 0.6) // Shrink to 60% at full drag
+            let backgroundOpacity = 1.0 - dragProgress
+            
+            ZStack {
+                // Black background fades out as you drag
+                Color.black
+                    .opacity(backgroundOpacity)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        if !isDragging {
+                            isPresented = false
+                        }
+                    }
+                
+                // Fullscreen viewer with swipe
+                TabView(selection: $currentIndex) {
+                    ForEach(Array(allPins.enumerated()), id: \.element.id) { index, pinItem in
+                        FullSizeImageView(
+                            pin: pinItem,
+                            cachedThumbnail: thumbnailCache[pinItem.id],
+                            onDismissGesture: { translation in
+                                // Use shorter dimension for dismiss zone calculation
+                                let screenWidth = geometry.size.width
+                                let screenHeight = geometry.size.height
+                                let shorterDimension = min(screenWidth, screenHeight)
+                                
+                                // Middle 50% based on shorter dimension, centered
+                                let zoneWidth = shorterDimension * 0.5
+                                let leftBound = (screenWidth - zoneWidth) / 2
+                                let rightBound = (screenWidth + zoneWidth) / 2
+                                let startX = translation.startLocation.x
+                                let inMiddleZone = startX >= leftBound && startX <= rightBound
+                                
+                                // Check if this is primarily a vertical drag down
+                                let isVerticalDown = translation.translation.height > 0 && 
+                                                     abs(translation.translation.height) > abs(translation.translation.width)
+                                
+                                // Allow dismiss gesture if in middle zone and vertical
+                                if isVerticalDown && inMiddleZone {
+                                    isDragging = true
+                                    dragOffset = translation.translation.height
+                                    return true
+                                }
+                                return false
+                            },
+                            onDismissEnd: {
+                                isDragging = false
+                                
+                                // Check if we've passed the dismiss threshold
+                                if dragProgress >= dismissThreshold {
+                                    // Dismiss
+                                    withAnimation(.easeOut(duration: 0.25)) {
+                                        dragOffset = screenHeight
+                                    }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                        isPresented = false
+                                    }
+                                } else {
+                                    // Snap back
+                                    withAnimation(.interpolatingSpring(stiffness: 300, damping: 25)) {
+                                        dragOffset = 0
+                                    }
+                                }
+                            }
+                        )
+                        .tag(index)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .ignoresSafeArea()
+                .scaleEffect(scale)
+                .offset(y: dragOffset)
+                
+                // Close button
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            if !isDragging {
+                                isPresented = false
+                            }
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(.white)
+                                .shadow(color: .black.opacity(0.5), radius: 4)
+                        }
+                        .padding(16)
+                    }
+                    Spacer()
+                }
+                .opacity(backgroundOpacity)
+            }
+        }
+    }
+}
+
+// MARK: - Full Size Image View
+struct FullSizeImageView: View {
     let pin: PinryPinDetail
+    let cachedThumbnail: Image?
+    let onDismissGesture: ((DragGesture.Value) -> Bool)?
+    let onDismissEnd: (() -> Void)?
+    @State private var fullSizeImage: Image? = nil
+    @State private var isLoadingFull = false
+    
+    // Zoom state
+    @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+    
+    init(pin: PinryPinDetail, cachedThumbnail: Image?, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
+        self.pin = pin
+        self.cachedThumbnail = cachedThumbnail
+        self.onDismissGesture = onDismissGesture
+        self.onDismissEnd = onDismissEnd
+    }
+    
+    var body: some View {
+        ZStack {
+            // Show cached thumbnail immediately - ZERO delay
+            if let thumbnail = cachedThumbnail {
+                thumbnail
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            }
+            
+            // Full size image (fades in on top)
+            if let fullImg = fullSizeImage {
+                fullImg
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .transition(.opacity)
+            }
+        }
+        .scaleEffect(scale)
+        .offset(offset)
+        .gesture(
+            // Pinch to zoom
+            MagnificationGesture()
+                .onChanged { value in
+                    scale = lastScale * value
+                }
+                .onEnded { value in
+                    lastScale = scale
+                    // Limit zoom between 1x and 5x
+                    let limitedScale = min(max(scale, 1.0), 5.0)
+                    withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+                        scale = limitedScale
+                        lastScale = limitedScale
+                        
+                        // Reset offset if zoomed out completely
+                        if scale <= 1.0 {
+                            offset = .zero
+                            lastOffset = .zero
+                        }
+                    }
+                }
+        )
+        .simultaneousGesture(
+            // Pan when zoomed OR dismiss when not zoomed
+            DragGesture(minimumDistance: 20)
+                .onChanged { value in
+                    if scale > 1.0 {
+                        // Pan around when zoomed
+                        offset = CGSize(
+                            width: lastOffset.width + value.translation.width,
+                            height: lastOffset.height + value.translation.height
+                        )
+                    } else {
+                        // Try dismiss gesture when not zoomed
+                        _ = onDismissGesture?(value)
+                    }
+                }
+                .onEnded { value in
+                    if scale > 1.0 {
+                        lastOffset = offset
+                    } else {
+                        onDismissEnd?()
+                    }
+                }
+        )
+        .onTapGesture(count: 2) {
+            // Double-tap to reset zoom
+            withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+                scale = 1.0
+                lastScale = 1.0
+                offset = .zero
+                lastOffset = .zero
+            }
+        }
+        .onAppear {
+            if fullSizeImage == nil && !isLoadingFull {
+                loadFullSizeImage()
+            }
+        }
+    }
+    
+    private func loadFullSizeImage() {
+        guard let fullUrl = pin.image.fullSizeUrl, let url = URL(string: fullUrl) else { return }
+        
+        isLoadingFull = true
+        Task {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if let uiImage = UIImage(data: data) {
+                    await MainActor.run {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            fullSizeImage = Image(uiImage: uiImage)
+                        }
+                    }
+                }
+            } catch {
+                print("Failed to load full-size image: \(error)")
+            }
+        }
+    }
+}
+
+// MARK: - Cached Async Image (doesn't reload)
+struct CachedAsyncImage: View {
+    let url: String
+    @State private var image: Image? = nil
     
     var body: some View {
         Group {
-            if let imageUrl = pin.image.bestImageUrl, let url = URL(string: imageUrl) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .aspectRatio(aspectRatio, contentMode: .fit)
-                            .overlay(
-                                ProgressView()
-                            )
-                    case .success(let image):
-                        image
+            if let img = image {
+                img
+                    .resizable()
+            } else if let imageUrl = URL(string: url) {
+                AsyncImage(url: imageUrl) { phase in
+                    if case .success(let loadedImage) = phase {
+                        loadedImage
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    case .failure:
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .aspectRatio(1.0, contentMode: .fit)
-                            .overlay(
-                                Image(systemName: "photo")
-                                    .foregroundColor(.gray)
-                            )
-                    @unknown default:
-                        EmptyView()
+                            .onAppear {
+                                image = loadedImage
+                            }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Pin Thumbnail View
+struct PinThumbnailView: View {
+    let pin: PinryPinDetail
+    let isSelected: Bool
+    let onImageLoaded: ((Image) -> Void)?
+    @State private var thumbnailImage: Image? = nil
+    
+    init(pin: PinryPinDetail, isSelected: Bool = false, onImageLoaded: ((Image) -> Void)? = nil) {
+        self.pin = pin
+        self.isSelected = isSelected
+        self.onImageLoaded = onImageLoaded
+    }
+    
+    var body: some View {
+        Group {
+            if let thumbImg = thumbnailImage {
+                thumbImg
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else if let thumbnailUrl = pin.image.thumbnail?.url, let url = URL(string: thumbnailUrl) {
+                // Show loader immediately, then load thumbnail
+                ZStack {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.05))
+                        .aspectRatio(thumbnailAspectRatio, contentMode: .fit)
+                        .overlay(
+                            PinryLoadingView(size: 64, desaturated: true, animated: false)
+                        )
+                    
+                    AsyncImage(url: url) { phase in
+                        if case .success(let image) = phase {
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .onAppear {
+                                    thumbnailImage = image
+                                    onImageLoaded?(image)
+                                }
+                        }
                     }
                 }
             } else {
@@ -265,7 +657,7 @@ struct PinThumbnailView: View {
         .cornerRadius(8)
     }
     
-    private var aspectRatio: CGFloat {
+    private var thumbnailAspectRatio: CGFloat {
         if let width = pin.image.thumbnail?.width,
            let height = pin.image.thumbnail?.height,
            height > 0 {
@@ -285,7 +677,7 @@ struct SettingsView: View {
     @State private var alertMessage = ""
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             Color(uiColor: .systemBackground).ignoresSafeArea()
             
             ScrollView {
@@ -293,22 +685,6 @@ struct SettingsView: View {
                     Spacer()
                     
                     VStack(alignment: .leading, spacing: 0) {
-                        // Close button for sheet mode
-                        if isPresented {
-                            HStack {
-                                Spacer()
-                                Button(action: {
-                                    isPresented = false
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .font(.system(size: 28))
-                                        .foregroundColor(Color(uiColor: .secondaryLabel))
-                                }
-                            }
-                            .padding(.top, 16)
-                            .padding(.bottom, 8)
-                        }
-                        
                         // Logo at top
                         HStack {
                             Spacer()
@@ -316,7 +692,7 @@ struct SettingsView: View {
                                 .frame(width: 80, height: 80)
                             Spacer()
                         }
-                        .padding(.top, isPresented ? 8 : 60)
+                        .padding(.top, isPresented ? 60 : 60)
                         .padding(.bottom, 40)
                         
                         // Input fields container
@@ -386,6 +762,19 @@ struct SettingsView: View {
                     
                     Spacer()
                 }
+            }
+            
+            // Close button - positioned absolutely in top right corner
+            if isPresented {
+                Button(action: {
+                    isPresented = false
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 28))
+                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                }
+                .padding(.top, 16)
+                .padding(.trailing, 16)
             }
         }
         .onAppear {
