@@ -85,44 +85,170 @@ class PinryUploader {
         // Board ID is optional now
         let boardToUse = pin.boardID.isEmpty ? defaultBoardID : pin.boardID
         
-        // Build URL - using v2 API like the JavaScript client
+        // Determine if this is an image upload or URL pin
+        if let imageData = pin.imageData {
+            // Two-step process: 1) Upload image, 2) Create pin with image ID
+            let processedImageData: Data
+            do {
+                processedImageData = try convertToJPEGIfNeeded(imageData)
+            } catch {
+                return PinryUploadResult(success: false, message: "Failed to process image: \(error.localizedDescription)")
+            }
+            
+            // Step 1: Upload image to /api/v2/images/
+            guard let imageID = await uploadImage(processedImageData, apiToken: apiToken) else {
+                return PinryUploadResult(success: false, message: "Failed to upload image")
+            }
+            
+            // Step 2: Create pin with image ID
+            return await createPinWithImageID(
+                imageID: imageID,
+                description: pin.description,
+                source: pin.source,
+                boardID: boardToUse,
+                tags: pin.tags,
+                apiToken: apiToken
+            )
+        } else if let urlString = pin.url {
+            // URL-based pin - single step
+            return await createPinWithURL(
+                url: urlString,
+                description: pin.description,
+                source: pin.source,
+                boardID: boardToUse,
+                tags: pin.tags,
+                apiToken: apiToken
+            )
+        } else {
+            return PinryUploadResult(success: false, message: "Pin must have either image data or URL")
+        }
+    }
+    
+    // MARK: - Image Upload (Step 1)
+    
+    private func uploadImage(_ imageData: Data, apiToken: String) async -> Int? {
+        guard let url = URL(string: "\(baseURL)/api/v2/images/") else {
+            return nil
+        }
+        
+        let boundary = UUID().uuidString
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Token \(apiToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        var body = Data()
+        
+        // Add image field
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(imageData)
+        body.append("\r\n".data(using: .utf8)!)
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        request.httpBody = body
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 else {
+                return nil
+            }
+            
+            // Parse response to get image ID
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let imageID = json["id"] as? Int {
+                return imageID
+            }
+            
+            return nil
+        } catch {
+            return nil
+        }
+    }
+    
+    // MARK: - Pin Creation (Step 2)
+    
+    private func createPinWithImageID(
+        imageID: Int,
+        description: String,
+        source: String,
+        boardID: String,
+        tags: [String],
+        apiToken: String
+    ) async -> PinryUploadResult {
         guard let url = URL(string: "\(baseURL)/api/v2/pins/") else {
+            return PinryUploadResult(success: false, message: "Invalid Pinry Base URL")
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Token \(apiToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        var pinData: [String: Any] = [
+            "description": description,
+            "source": source,
+            "image_by_id": imageID
+        ]
+        
+        if !boardID.isEmpty {
+            pinData["board"] = boardID
+        }
+        
+        if !tags.isEmpty {
+            pinData["tags"] = tags
+        }
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: pinData)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 {
+                    return PinryUploadResult(success: true, message: "Pin saved successfully!")
+                } else {
+                    let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
+                    return PinryUploadResult(success: false, message: "Server error (\(httpResponse.statusCode)): \(errorMessage)")
+                }
+            } else {
+                return PinryUploadResult(success: false, message: "Invalid response from server")
+            }
+        } catch {
+            return PinryUploadResult(success: false, message: "Network error: \(error.localizedDescription)")
+        }
+    }
+    
+    private func createPinWithURL(
+        url: String,
+        description: String,
+        source: String,
+        boardID: String,
+        tags: [String],
+        apiToken: String
+    ) async -> PinryUploadResult {
+        guard let pinURL = URL(string: "\(baseURL)/api/v2/pins/") else {
             return PinryUploadResult(success: false, message: "Invalid Pinry Base URL")
         }
         
         let request: URLRequest
         do {
-            if let imageData = pin.imageData {
-                // Image-based pin
-                let processedImageData = try convertToJPEGIfNeeded(imageData)
-                request = try createMultipartRequest(
-                    url: url,
-                    apiToken: apiToken,
-                    imageData: processedImageData,
-                    description: pin.description,
-                    source: pin.source,
-                    boardID: boardToUse,
-                    tags: pin.tags
-                )
-            } else if let urlString = pin.url {
-                // URL-based pin
-                request = try createJSONRequest(
-                    url: url,
-                    apiToken: apiToken,
-                    pinUrl: urlString,
-                    description: pin.description,
-                    source: pin.source,
-                    boardID: boardToUse,
-                    tags: pin.tags
-                )
-            } else {
-                return PinryUploadResult(success: false, message: "Pin must have either image data or URL")
-            }
+            request = try createJSONRequest(
+                url: pinURL,
+                apiToken: apiToken,
+                pinUrl: url,
+                description: description,
+                source: source,
+                boardID: boardID,
+                tags: tags
+            )
         } catch {
             return PinryUploadResult(success: false, message: "Failed to create request: \(error.localizedDescription)")
         }
         
-        // Perform upload
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
@@ -158,65 +284,6 @@ class PinryUploader {
         }
         
         return imageData
-    }
-    
-    private func createMultipartRequest(
-        url: URL,
-        apiToken: String,
-        imageData: Data,
-        description: String,
-        source: String,
-        boardID: String,
-        tags: [String]
-    ) throws -> URLRequest {
-        
-        let boundary = UUID().uuidString
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Token \(apiToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        var body = Data()
-        
-        // Add image field
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
-        body.append(imageData)
-        body.append("\r\n".data(using: .utf8)!)
-        
-        // Add description field
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"description\"\r\n\r\n".data(using: .utf8)!)
-        body.append("\(description)\r\n".data(using: .utf8)!)
-        
-        // Add source field
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"source\"\r\n\r\n".data(using: .utf8)!)
-        body.append("\(source)\r\n".data(using: .utf8)!)
-        
-        // Add board field (only if not empty)
-        if !boardID.isEmpty {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"board\"\r\n\r\n".data(using: .utf8)!)
-            body.append("\(boardID)\r\n".data(using: .utf8)!)
-        }
-        
-        // Add tags field (as JSON array)
-        if !tags.isEmpty {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"tags\"\r\n".data(using: .utf8)!)
-            body.append("Content-Type: application/json\r\n\r\n".data(using: .utf8)!)
-            if let tagsJSON = try? JSONSerialization.data(withJSONObject: tags) {
-                body.append(tagsJSON)
-            }
-            body.append("\r\n".data(using: .utf8)!)
-        }
-        
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        
-        request.httpBody = body
-        return request
     }
     
     private func createJSONRequest(
