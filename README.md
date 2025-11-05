@@ -10,6 +10,43 @@ A SwiftUI iOS app with share extension for saving images and URLs to Pinry insta
 - **Secure Storage**: API token stored in shared Keychain between app and extension
 - **Shared Settings**: Uses App Group UserDefaults to share settings between targets
 - **Image Processing**: Automatic HEIC to JPEG conversion before upload
+- **Server Validation**: Built-in validation checks your Pinry server connection on first setup
+- **Smart Onboarding**: API token is optional for browsing public pins (only required for saving)
+
+## Setting Up Your Pinry Server
+
+This iOS app connects to a self-hosted [Pinry server](https://github.com/pinry/pinry). You'll need to set up your own Pinry instance first.
+
+### Quick Server Setup with Docker
+
+The easiest way to get Pinry running is with Docker. From the [Pinry project](https://github.com/pinry/pinry):
+
+```bash
+# Clone the Pinry repository
+git clone https://github.com/pinry/pinry.git
+cd pinry
+
+# Start with docker-compose
+docker-compose -f docker-compose.example.yml up -d
+```
+
+Your Pinry server will be available at `http://localhost` (or your server's IP).
+
+### Getting Your API Token
+
+1. Access your Pinry web interface
+2. Create an account or log in
+3. Go to your account settings
+4. Generate an API token
+5. Copy this token for use in the iOS app
+
+### Configuration Tips
+
+- **Public Pins**: If your Pinry instance allows public viewing, you can browse pins without an API token
+- **Saving Pins**: API token is required to save new images/URLs to your Pinry
+- **HTTPS Recommended**: Use HTTPS in production for secure API token transmission
+
+For detailed Pinry server setup, visit the [official documentation](https://pinry.github.io/pinry/).
 
 ## Project Structure
 
