@@ -26,23 +26,26 @@ struct PinryPin {
     let description: String
     let source: String
     let boardID: String
+    let tags: [String]    // Image classification tags
     
     // Convenience initializer for image-based pins
-    init(imageData: Data, description: String, source: String, boardID: String) {
+    init(imageData: Data, description: String, source: String, boardID: String, tags: [String] = []) {
         self.imageData = imageData
         self.url = nil
         self.description = description
         self.source = source
         self.boardID = boardID
+        self.tags = tags
     }
     
     // Convenience initializer for URL-based pins
-    init(url: URL, description: String, source: String, boardID: String) {
+    init(url: URL, description: String, source: String, boardID: String, tags: [String] = []) {
         self.imageData = nil
         self.url = url.absoluteString
         self.description = description
         self.source = source
         self.boardID = boardID
+        self.tags = tags
     }
 }
 
@@ -98,7 +101,8 @@ class PinryUploader {
                     imageData: processedImageData,
                     description: pin.description,
                     source: pin.source,
-                    boardID: boardToUse
+                    boardID: boardToUse,
+                    tags: pin.tags
                 )
             } else if let urlString = pin.url {
                 // URL-based pin
@@ -108,7 +112,8 @@ class PinryUploader {
                     pinUrl: urlString,
                     description: pin.description,
                     source: pin.source,
-                    boardID: boardToUse
+                    boardID: boardToUse,
+                    tags: pin.tags
                 )
             } else {
                 return PinryUploadResult(success: false, message: "Pin must have either image data or URL")
@@ -161,7 +166,8 @@ class PinryUploader {
         imageData: Data,
         description: String,
         source: String,
-        boardID: String
+        boardID: String,
+        tags: [String]
     ) throws -> URLRequest {
         
         let boundary = UUID().uuidString
@@ -196,6 +202,17 @@ class PinryUploader {
             body.append("\(boardID)\r\n".data(using: .utf8)!)
         }
         
+        // Add tags field (as JSON array)
+        if !tags.isEmpty {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"tags\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: application/json\r\n\r\n".data(using: .utf8)!)
+            if let tagsJSON = try? JSONSerialization.data(withJSONObject: tags) {
+                body.append(tagsJSON)
+            }
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
         
         request.httpBody = body
@@ -208,7 +225,8 @@ class PinryUploader {
         pinUrl: String,
         description: String,
         source: String,
-        boardID: String
+        boardID: String,
+        tags: [String]
     ) throws -> URLRequest {
         
         var request = URLRequest(url: url)
@@ -225,6 +243,11 @@ class PinryUploader {
         // Add board ID only if not empty
         if !boardID.isEmpty {
             pinData["board"] = boardID
+        }
+        
+        // Add tags as array
+        if !tags.isEmpty {
+            pinData["tags"] = tags
         }
         
         request.httpBody = try JSONSerialization.data(withJSONObject: pinData)

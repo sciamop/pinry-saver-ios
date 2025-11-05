@@ -340,11 +340,15 @@ class ShareViewController: UIViewController {
         
         // Reuse already-loaded image data if available
         if let existingData = sharedImageData {
+            // Classify the image to get tags
+            let tags = await ImageClassifier.shared.classifyImage(existingData)
+            
             return PinryPin(
                 imageData: existingData,
                 description: description,
                 source: source,
-                boardID: ""
+                boardID: "",
+                tags: tags
             )
         }
         
@@ -382,15 +386,21 @@ class ShareViewController: UIViewController {
                             }
                         }
                         
-                        // Use pre-extracted description and source
-                        let pin = PinryPin(
-                            imageData: imageData,
-                            description: description,
-                            source: source,
-                            boardID: ""
-                        )
-                        
-                        continuation.resume(returning: pin)
+                        // Classify image to get tags
+                        Task {
+                            let tags = await ImageClassifier.shared.classifyImage(imageData)
+                            
+                            // Use pre-extracted description and source
+                            let pin = PinryPin(
+                                imageData: imageData,
+                                description: description,
+                                source: source,
+                                boardID: "",
+                                tags: tags
+                            )
+                            
+                            continuation.resume(returning: pin)
+                        }
                     } else {
                         tryNextImageType(index: index + 1)
                     }
@@ -414,11 +424,15 @@ class ShareViewController: UIViewController {
                     let description = generateURLDescription(from: url)
                     let source = url.host ?? url.absoluteString
                     
+                    // Classify image if we have it loaded for thumbnail
+                    let tags = await classifySharedImageIfAvailable()
+                    
                     return PinryPin(
                         url: url,
                         description: description,
                         source: source,
-                        boardID: ""
+                        boardID: "",
+                        tags: tags
                     )
                 }
             }
@@ -451,16 +465,29 @@ class ShareViewController: UIViewController {
                 let description = self.generateURLDescription(from: url)
                 let source = url.host ?? url.absoluteString
                 
-                let pin = PinryPin(
-                    url: url,
-                    description: description,
-                    source: source,
-                    boardID: ""
-                )
-                
-                continuation.resume(returning: pin)
+                // Classify image if we have it loaded for thumbnail
+                Task {
+                    let tags = await self.classifySharedImageIfAvailable()
+                    
+                    let pin = PinryPin(
+                        url: url,
+                        description: description,
+                        source: source,
+                        boardID: "",
+                        tags: tags
+                    )
+                    
+                    continuation.resume(returning: pin)
+                }
             }
         }
+    }
+    
+    private func classifySharedImageIfAvailable() async -> [String] {
+        guard let imageData = sharedImageData else {
+            return []
+        }
+        return await ImageClassifier.shared.classifyImage(imageData)
     }
     
     private func downloadImageFromURL(_ url: URL) async throws -> Data {

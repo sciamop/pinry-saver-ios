@@ -437,6 +437,7 @@ struct FullscreenImageViewer: View {
     
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
+    @State private var showTags = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -463,6 +464,7 @@ struct FullscreenImageViewer: View {
                         FullSizeImageView(
                             pin: pinItem,
                             cachedThumbnail: thumbnailCache[pinItem.id],
+                            showTags: $showTags,
                             onDismissGesture: { translation in
                                 // Use shorter dimension for dismiss zone calculation
                                 let screenWidth = geometry.size.width
@@ -550,6 +552,7 @@ struct FullscreenImageViewer: View {
 struct FullSizeImageView: View {
     let pin: PinryPinDetail
     let cachedThumbnail: Image?
+    @Binding var showTags: Bool
     let onDismissGesture: ((DragGesture.Value) -> Bool)?
     let onDismissEnd: (() -> Void)?
     @State private var fullSizeImage: Image? = nil
@@ -561,33 +564,36 @@ struct FullSizeImageView: View {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     
-    init(pin: PinryPinDetail, cachedThumbnail: Image?, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
+    init(pin: PinryPinDetail, cachedThumbnail: Image?, showTags: Binding<Bool>, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
         self.pin = pin
         self.cachedThumbnail = cachedThumbnail
+        self._showTags = showTags
         self.onDismissGesture = onDismissGesture
         self.onDismissEnd = onDismissEnd
     }
     
     var body: some View {
-        ZStack {
-            // Show cached thumbnail immediately - ZERO delay
-            if let thumbnail = cachedThumbnail {
-                thumbnail
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+        ZStack(alignment: .topLeading) {
+            // Main image content
+            ZStack {
+                // Show cached thumbnail immediately - ZERO delay
+                if let thumbnail = cachedThumbnail {
+                    thumbnail
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+                
+                // Full size image (fades in on top)
+                if let fullImg = fullSizeImage {
+                    fullImg
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .transition(.opacity)
+                }
             }
-            
-            // Full size image (fades in on top)
-            if let fullImg = fullSizeImage {
-                fullImg
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .transition(.opacity)
-            }
-        }
-        .scaleEffect(scale)
-        .offset(offset)
-        .gesture(
+            .scaleEffect(scale)
+            .offset(offset)
+            .gesture(
             // Pinch to zoom
             MagnificationGesture()
                 .onChanged { value in
@@ -631,15 +637,54 @@ struct FullSizeImageView: View {
                         onDismissEnd?()
                     }
                 }
-        )
-        .onTapGesture(count: 2) {
-            // Double-tap to reset zoom
-            withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
-                scale = 1.0
-                lastScale = 1.0
-                offset = .zero
-                lastOffset = .zero
+            )
+            .onTapGesture(count: 2) {
+                // Double-tap to reset zoom
+                withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+                    scale = 1.0
+                    lastScale = 1.0
+                    offset = .zero
+                    lastOffset = .zero
+                }
             }
+            
+            // Tag icon and display in upper left
+            VStack(alignment: .leading, spacing: 8) {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showTags.toggle()
+                    }
+                }) {
+                    let hasTags = pin.tags?.isEmpty == false
+                    let iconColor = hasTags ? Color.pinryMagenta : Color.white
+                    
+                    Image(systemName: showTags ? "tag.fill" : "tag")
+                        .font(.system(size: 24))
+                        .foregroundColor(iconColor)
+                        .padding(12)
+                        .background(Color.black.opacity(0.4))
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.3), radius: 4)
+                }
+                
+                // Tags display
+                if showTags, let tags = pin.tags, !tags.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(tags, id: \.self) { tag in
+                            Text(tag)
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.black.opacity(0.6))
+                                .cornerRadius(16)
+                        }
+                    }
+                    .padding(.leading, 4)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+            }
+            .padding(16)
         }
         .onAppear {
             // Reset zoom state when image appears
