@@ -13,6 +13,10 @@ A SwiftUI iOS app with share extension for saving images and URLs to Pinry insta
 - **Server Validation**: Built-in validation checks your Pinry server connection on first setup
 - **Smart Onboarding**: API token is optional for browsing public pins (only required for saving)
 
+## Screenshots
+
+<img src="https://pinry.whistlehog.com/media/2/a/2a541952ec40f7b97529a60b5c772faa/image.jpg" width="300" alt="PinrySaver Screenshot 1"> <img src="https://pinry.whistlehog.com/media/c/9/c93e8557739e6dca4b3feaa3776a8692/image.jpg" width="300" alt="PinrySaver Screenshot 2">
+
 ## Setting Up Your Pinry Server
 
 This iOS app connects to a self-hosted [Pinry server](https://github.com/pinry/pinry). You'll need to set up your own Pinry instance first.
