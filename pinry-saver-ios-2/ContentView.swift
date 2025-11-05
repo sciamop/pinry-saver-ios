@@ -940,7 +940,7 @@ struct SettingsView: View {
                             Divider()
                                 .padding(.top, 30)
                             
-                            Link(destination: URL(string: "https://github.com/pinry/pinry")!) {
+                            Link(destination: URL(string: "https://github.com/sciamop/pinry-saver-ios")!) {
                                 Text("View on GitHub")
                                     .font(.system(size: 15))
                                     .foregroundColor(Color(uiColor: .secondaryLabel))
