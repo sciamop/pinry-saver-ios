@@ -8,7 +8,7 @@ class ShareViewController: UIViewController {
     private var thumbnailImageView: UIImageView?
     private var statusLabel: UILabel?
     private var messageLabel: UILabel?
-    private var activityIndicator: UIActivityIndicatorView?
+    private var activityIndicator: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -194,12 +194,17 @@ class ShareViewController: UIViewController {
             imageView.heightAnchor.constraint(equalToConstant: 200)
         ])
         
-        // Activity indicator
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.color = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0)
-        spinner.startAnimating()
+        // Spinning P logo indicator
+        let spinner = PinrySpinnerView()
         spinner.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(spinner)
+        
+        NSLayoutConstraint.activate([
+            spinner.widthAnchor.constraint(equalToConstant: 60),
+            spinner.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        // Store as UIImageView for compatibility (we'll cast it)
         activityIndicator = spinner
         
         // Status label (initially empty, will show checkmark/X on completion)
@@ -583,9 +588,9 @@ class ShareViewController: UIViewController {
     }
     
     private func updateUIForSuccess(_ message: String) {
-        // Hide spinner
-        activityIndicator?.stopAnimating()
-        activityIndicator?.alpha = 0
+        // Hide spinner - remove from layout
+        (activityIndicator as? PinrySpinnerView)?.stopAnimating()
+        activityIndicator?.isHidden = true
         
         // Show success icon
         statusLabel?.text = "✓"
@@ -611,9 +616,9 @@ class ShareViewController: UIViewController {
     }
     
     private func updateUIForError(_ message: String) {
-        // Hide spinner
-        activityIndicator?.stopAnimating()
-        activityIndicator?.alpha = 0
+        // Hide spinner - remove from layout
+        (activityIndicator as? PinrySpinnerView)?.stopAnimating()
+        activityIndicator?.isHidden = true
         
         // Show error icon
         statusLabel?.text = "❌"
@@ -655,5 +660,101 @@ class ShareViewController: UIViewController {
         uploadTask?.cancel()
         let error = NSError(domain: "PinryShare", code: 1, userInfo: [NSLocalizedDescriptionKey: reason])
         extensionContext?.cancelRequest(withError: error)
+    }
+}
+
+// MARK: - Pinry Spinner View
+class PinrySpinnerView: UIView {
+    
+    private let shapeLayer = CAShapeLayer()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupSpinner()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupSpinner()
+    }
+    
+    private func setupSpinner() {
+        backgroundColor = .clear
+        
+        // Create the P logo path
+        shapeLayer.fillColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0).cgColor
+        shapeLayer.strokeColor = nil
+        layer.addSublayer(shapeLayer)
+        
+        // Start spinning
+        startAnimating()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        shapeLayer.frame = bounds
+        shapeLayer.path = createPLogoPath().cgPath
+    }
+    
+    private func createPLogoPath() -> UIBezierPath {
+        let size = min(bounds.width, bounds.height)
+        let lineWidth = size * 0.055  // Much thinner - about 3.3pt for 60pt size
+        let spacing = size * 0.05     // Tighter spacing
+        
+        let path = UIBezierPath()
+        
+        // Create three parallel vertical stripes for the P stem
+        let stemX = size * 0.28
+        let stemTop = size * 0.12
+        let stemBottom = size * 0.88
+        
+        for i in 0..<3 {
+            let x = stemX + CGFloat(i) * (lineWidth + spacing)
+            let verticalLine = UIBezierPath(roundedRect: CGRect(x: x, y: stemTop, width: lineWidth, height: stemBottom - stemTop), cornerRadius: lineWidth / 2)
+            path.append(verticalLine)
+        }
+        
+        // Create three parallel curved stripes for the P bowl
+        let bowlCenterX = size * 0.60
+        let bowlCenterY = size * 0.33
+        let bowlRadius = size * 0.24
+        
+        for i in 0..<3 {
+            let currentRadius = bowlRadius - CGFloat(i) * (lineWidth + spacing)
+            
+            // Create arc path
+            let arcPath = UIBezierPath()
+            arcPath.addArc(withCenter: CGPoint(x: bowlCenterX, y: bowlCenterY),
+                          radius: currentRadius,
+                          startAngle: -.pi / 2,
+                          endAngle: .pi / 2,
+                          clockwise: true)
+            
+            // Stroke it to create the filled shape
+            let strokedPath = CGPath(__byStroking: arcPath.cgPath,
+                                    transform: nil,
+                                    lineWidth: lineWidth,
+                                    lineCap: .round,
+                                    lineJoin: .round,
+                                    miterLimit: 0)!
+            
+            path.append(UIBezierPath(cgPath: strokedPath))
+        }
+        
+        return path
+    }
+    
+    func startAnimating() {
+        let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotation.fromValue = 0
+        rotation.toValue = Double.pi * 2
+        rotation.duration = 0.8
+        rotation.repeatCount = .infinity
+        rotation.timingFunction = CAMediaTimingFunction(name: .linear)
+        layer.add(rotation, forKey: "spin")
+    }
+    
+    func stopAnimating() {
+        layer.removeAnimation(forKey: "spin")
     }
 }

@@ -5,7 +5,7 @@
 
 import Foundation
 import UIKit
-import Vision
+@preconcurrency import Vision
 
 class ImageClassifier {
     
@@ -23,29 +23,29 @@ class ImageClassifier {
         }
         
         return await withCheckedContinuation { continuation in
-            let request = VNClassifyImageRequest { request, error in
-                guard error == nil,
-                      let results = request.results as? [VNClassificationObservation] else {
-                    continuation.resume(returning: [])
-                    return
+            DispatchQueue.global(qos: .userInitiated).async {
+                let request = VNClassifyImageRequest { request, error in
+                    guard error == nil,
+                          let results = request.results as? [VNClassificationObservation] else {
+                        continuation.resume(returning: [])
+                        return
+                    }
+                    
+                    // Filter results by confidence threshold and take top tags
+                    let tags = results
+                        .filter { $0.confidence > 0.1 } // Only include tags with >10% confidence
+                        .prefix(10) // Limit to top 10 tags
+                        .map { observation in
+                            // Clean up the identifier - remove underscores, capitalize properly
+                            self.cleanTagIdentifier(observation.identifier)
+                        }
+                        .filter { !$0.isEmpty } // Remove any empty tags
+                    
+                    continuation.resume(returning: Array(tags))
                 }
                 
-                // Filter results by confidence threshold and take top tags
-                let tags = results
-                    .filter { $0.confidence > 0.1 } // Only include tags with >10% confidence
-                    .prefix(10) // Limit to top 10 tags
-                    .map { observation in
-                        // Clean up the identifier - remove underscores, capitalize properly
-                        self.cleanTagIdentifier(observation.identifier)
-                    }
-                    .filter { !$0.isEmpty } // Remove any empty tags
+                let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
                 
-                continuation.resume(returning: Array(tags))
-            }
-            
-            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-            
-            DispatchQueue.global(qos: .userInitiated).async {
                 do {
                     try handler.perform([request])
                 } catch {
