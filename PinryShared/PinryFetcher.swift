@@ -40,6 +40,64 @@ class PinryFetcher {
         return settings.apiToken.isEmpty ? nil : settings.apiToken
     }
     
+    // MARK: - Validate Pinry Server
+    
+    /// Validates that the given URL is a working Pinry server by attempting to fetch pins
+    func validatePinryServer(baseURL: String, apiToken: String? = nil) async -> (isValid: Bool, errorMessage: String?) {
+        // Build URL with query parameters
+        guard var urlComponents = URLComponents(string: "\(baseURL)/api/v2/pins/") else {
+            return (false, "Invalid URL format")
+        }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "limit", value: "1")
+        ]
+        
+        guard let url = urlComponents.url else {
+            return (false, "Failed to construct URL")
+        }
+        
+        // Create request
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.timeoutInterval = 10
+        
+        // Add token if provided
+        if let token = apiToken, !token.isEmpty {
+            request.setValue("Token \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return (false, "Invalid response from server")
+            }
+            
+            // Accept 200 OK or 401 Unauthorized (means Pinry is there, just needs auth for private pins)
+            if httpResponse.statusCode == 200 || httpResponse.statusCode == 401 {
+                // Try to decode to verify it's actually Pinry
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                
+                if let _ = try? decoder.decode(PinryPinsResponse.self, from: data) {
+                    return (true, nil)
+                }
+                
+                // Even if decode fails, 200/401 from /api/v2/pins/ is good enough
+                return (true, nil)
+            } else if httpResponse.statusCode == 404 {
+                return (false, "This doesn't appear to be a Pinry server (API not found)")
+            } else {
+                return (false, "Server returned error code \(httpResponse.statusCode)")
+            }
+            
+        } catch {
+            return (false, "Unable to connect: \(error.localizedDescription)")
+        }
+    }
+    
     // MARK: - Fetch Pins Method
     
     func fetchPins(offset: Int = 0, limit: Int = 20) async -> PinryFetchResult {
@@ -54,15 +112,8 @@ class PinryFetcher {
             )
         }
         
-        guard let apiToken = apiToken, !apiToken.isEmpty else {
-            return PinryFetchResult(
-                success: false,
-                pins: [],
-                hasMore: false,
-                totalCount: 0,
-                error: "API Token is not configured"
-            )
-        }
+        // API token is now optional - reading public pins doesn't require it
+        let token = apiToken
         
         // Build URL with query parameters
         guard var urlComponents = URLComponents(string: "\(baseURL)/api/v2/pins/") else {
@@ -94,7 +145,12 @@ class PinryFetcher {
         // Create request
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("Token \(apiToken)", forHTTPHeaderField: "Authorization")
+        
+        // Add token if available
+        if let token = token, !token.isEmpty {
+            request.setValue("Token \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
         // Perform request

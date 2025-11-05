@@ -39,7 +39,8 @@ struct ContentView: View {
     
     private func checkCredentials() {
         let settings = PinrySettings.load()
-        hasCredentials = !settings.pinryBaseURL.isEmpty && !settings.apiToken.isEmpty
+        // Only require URL - API token is optional for reading public pins
+        hasCredentials = !settings.pinryBaseURL.isEmpty
     }
 }
 
@@ -863,6 +864,9 @@ struct SettingsView: View {
     @State private var defaultBoardID: String = ""
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var isValidating = false
+    @State private var validationSuccess = false
+    @State private var isFirstTimeUser = false
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -894,9 +898,9 @@ struct SettingsView: View {
                                 keyboardType: .URL
                             )
                             
-                            // API Key
+                            // API Key (optional)
                             CustomInputField(
-                                label: "API Key:",
+                                label: "API Key (optional, required for saving):",
                                 placeholder: "",
                                 text: $apiToken,
                                 isSecure: true
@@ -914,19 +918,19 @@ struct SettingsView: View {
                         
                         // Save Settings Button
                         Button(action: saveSettings) {
-                            Text("Save Settings")
+                            Text(isFirstTimeUser ? "Save Settings and Show Pinry" : "Save Settings")
                                 .font(.system(size: 17, weight: .semibold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 56)
                                 .background(
-                                    pinryBaseURL.isEmpty || apiToken.isEmpty 
+                                    pinryBaseURL.isEmpty
                                         ? Color.gray.opacity(0.3)
                                         : Color.pinryMagenta
                                 )
                                 .cornerRadius(28)
                         }
-                        .disabled(pinryBaseURL.isEmpty || apiToken.isEmpty)
+                        .disabled(pinryBaseURL.isEmpty || isValidating)
                         .padding(.top, 32)
                         
                         Spacer(minLength: 20)
@@ -964,6 +968,35 @@ struct SettingsView: View {
                 .padding(.top, 16)
                 .padding(.trailing, 16)
             }
+            
+            // Validation interstitial
+            if isValidating {
+                ZStack {
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    VStack(spacing: 24) {
+                        if validationSuccess {
+                            // Success state
+                            Text("✓")
+                                .font(.system(size: 60, weight: .regular))
+                                .foregroundColor(.pinryMagenta)
+                        } else {
+                            // Loading state
+                            PinryLoadingView(size: 80, desaturated: false, animated: true)
+                                .frame(width: 80, height: 80)
+                        }
+                        
+                        Text(validationSuccess ? "Connected!" : "Validating Pinry server...")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.primary)
+                    }
+                    .padding(40)
+                    .background(Color(uiColor: .systemBackground))
+                    .cornerRadius(20)
+                    .shadow(radius: 20)
+                }
+            }
         }
         .onAppear {
             loadSettings()
@@ -984,23 +1017,67 @@ struct SettingsView: View {
         pinryBaseURL = settings.pinryBaseURL
         defaultBoardID = settings.defaultBoardID
         apiToken = settings.apiToken
+        
+        // Check if this is a first-time user (no URL configured)
+        isFirstTimeUser = settings.pinryBaseURL.isEmpty
     }
     
     private func saveSettings() {
         // Validate URL format
-        guard URL(string: pinryBaseURL) != nil else {
+        let trimmedURL = pinryBaseURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard URL(string: trimmedURL) != nil else {
             showAlert("Please enter a valid URL")
             return
         }
         
-        var settings = PinrySettings.shared
-        settings.pinryBaseURL = pinryBaseURL.trimmingCharacters(in: .whitespacesAndNewlines)
-        settings.defaultBoardID = defaultBoardID.trimmingCharacters(in: .whitespacesAndNewlines)
-        settings.apiToken = apiToken.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Show validation interstitial
+        isValidating = true
         
-        PinrySettings.save(settings)
-        PinrySettings.invalidateCache()
-        showAlert("Settings saved successfully!")
+        Task {
+            // Validate the Pinry server
+            let trimmedToken = apiToken.trimmingCharacters(in: .whitespacesAndNewlines)
+            let validation = await PinryFetcher.shared.validatePinryServer(
+                baseURL: trimmedURL,
+                apiToken: trimmedToken.isEmpty ? nil : trimmedToken
+            )
+            
+            await MainActor.run {
+                if validation.isValid {
+                    // Save settings
+                    var settings = PinrySettings.shared
+                    settings.pinryBaseURL = trimmedURL
+                    settings.defaultBoardID = defaultBoardID.trimmingCharacters(in: .whitespacesAndNewlines)
+                    settings.apiToken = trimmedToken
+                    
+                    PinrySettings.save(settings)
+                    PinrySettings.invalidateCache()
+                    
+                    // Show success state
+                    validationSuccess = true
+                    
+                    // Wait 1.5 seconds, then dismiss
+                    Task {
+                        try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
+                        await MainActor.run {
+                            isValidating = false
+                            validationSuccess = false
+                            
+                            // Dismiss settings to show gallery
+                            if isPresented {
+                                isPresented = false
+                            }
+                        }
+                    }
+                } else {
+                    // Show error and keep user in settings
+                    isValidating = false
+                    validationSuccess = false
+                    
+                    let errorMsg = validation.errorMessage ?? "Unknown error"
+                    showAlert("Unable to connect to Pinry server:\n\n\(errorMsg)")
+                }
+            }
+        }
     }
     
     private func showAlert(_ message: String) {
