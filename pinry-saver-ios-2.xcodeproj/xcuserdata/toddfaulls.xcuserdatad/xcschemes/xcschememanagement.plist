@@ -7,12 +7,25 @@
 		<key>PinryShareExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<key>pinry-saver-ios-2.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>1BB87DED2E901D2000E69DDB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1BB87E002E901DFD00E69DDB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

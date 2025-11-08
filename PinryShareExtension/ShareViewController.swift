@@ -426,19 +426,8 @@ class ShareViewController: UIViewController {
             // Check if the title is a direct URL
             if trimmedTitle.hasPrefix("http://") || trimmedTitle.hasPrefix("https://") {
                 if let url = URL(string: trimmedTitle) {
-                    let description = generateURLDescription(from: url)
-                    let source = url.host ?? url.absoluteString
-                    
-                    // Classify image if we have it loaded for thumbnail
                     let tags = await classifySharedImageIfAvailable()
-                    
-                    return PinryPin(
-                        url: url,
-                        description: description,
-                        source: source,
-                        boardID: "",
-                        tags: tags
-                    )
+                    return createPreferredPin(for: url, tags: tags)
                 }
             }
         }
@@ -466,22 +455,10 @@ class ShareViewController: UIViewController {
                     return
                 }
                 
-                // Create pin with URL - Pinry will fetch the image!
-                let description = self.generateURLDescription(from: url)
-                let source = url.host ?? url.absoluteString
-                
-                // Classify image if we have it loaded for thumbnail
+                // Prefer uploading the actual image when we have it, otherwise fall back to URL pin.
                 Task {
                     let tags = await self.classifySharedImageIfAvailable()
-                    
-                    let pin = PinryPin(
-                        url: url,
-                        description: description,
-                        source: source,
-                        boardID: "",
-                        tags: tags
-                    )
-                    
+                    let pin = self.createPreferredPin(for: url, tags: tags)
                     continuation.resume(returning: pin)
                 }
             }
@@ -493,6 +470,29 @@ class ShareViewController: UIViewController {
             return []
         }
         return await ImageClassifier.shared.classifyImage(imageData)
+    }
+
+    private func createPreferredPin(for url: URL, tags: [String]) -> PinryPin {
+        let description = generateURLDescription(from: url)
+        let source = url.host ?? url.absoluteString
+        
+        if let imageData = sharedImageData, !imageData.isEmpty {
+            return PinryPin(
+                imageData: imageData,
+                description: description,
+                source: source,
+                boardID: "",
+                tags: tags
+            )
+        }
+        
+        return PinryPin(
+            url: url,
+            description: description,
+            source: source,
+            boardID: "",
+            tags: tags
+        )
     }
     
     private func downloadImageFromURL(_ url: URL) async throws -> Data {
@@ -667,6 +667,8 @@ class ShareViewController: UIViewController {
 class PinrySpinnerView: UIView {
     
     private let shapeLayer = CAShapeLayer()
+    private var rotationAnchor: CGPoint = CGPoint(x: 0.5, y: 0.5)
+    private var isAnimating = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -685,21 +687,25 @@ class PinrySpinnerView: UIView {
         shapeLayer.fillColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0).cgColor
         shapeLayer.strokeColor = nil
         layer.addSublayer(shapeLayer)
-        
-        // Start spinning
-        startAnimating()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        shapeLayer.frame = bounds
+        shapeLayer.bounds = CGRect(origin: .zero, size: bounds.size)
+        shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         shapeLayer.path = createPLogoPath().cgPath
+        shapeLayer.anchorPoint = rotationAnchor
+        shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        
+        if !isAnimating {
+            startAnimating()
+        }
     }
     
     private func createPLogoPath() -> UIBezierPath {
         let size = min(bounds.width, bounds.height)
-        let lineWidth = size * 0.055  // Much thinner - about 3.3pt for 60pt size
-        let spacing = size * 0.05     // Tighter spacing
+        let lineWidth = size * 0.035  // Thinner strokes (~2.1pt at 60pt size)
+        let spacing = size * 0.04     // Slightly reduced spacing
         
         let path = UIBezierPath()
         
@@ -718,6 +724,7 @@ class PinrySpinnerView: UIView {
         let bowlCenterX = size * 0.60
         let bowlCenterY = size * 0.33
         let bowlRadius = size * 0.24
+        rotationAnchor = CGPoint(x: bowlCenterX / size, y: bowlCenterY / size)
         
         for i in 0..<3 {
             let currentRadius = bowlRadius - CGFloat(i) * (lineWidth + spacing)
@@ -751,10 +758,12 @@ class PinrySpinnerView: UIView {
         rotation.duration = 0.8
         rotation.repeatCount = .infinity
         rotation.timingFunction = CAMediaTimingFunction(name: .linear)
-        layer.add(rotation, forKey: "spin")
+        shapeLayer.add(rotation, forKey: "spin")
+        isAnimating = true
     }
     
     func stopAnimating() {
-        layer.removeAnimation(forKey: "spin")
+        shapeLayer.removeAnimation(forKey: "spin")
+        isAnimating = false
     }
 }
