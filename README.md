@@ -71,7 +71,7 @@ PinrySaver/
 
 ### 1. Configure Bundle Identifiers
 
-1. Open `pinry-saver-ios-2.xcodeproj` in Xcode
+1. Open `PinrySaver.xcodeproj` in Xcode
 2. Select the project in the navigator
 3. For the main app target:
    - Set Bundle Identifier to: `com.example.pinrysaver`
@@ -97,7 +97,7 @@ PinrySaver/
 ### 4. Add Shared Files to Targets
 
 1. Add `PinryShared` folder to both targets:
-   - Right-click on project > Add Files to "pinry-saver-ios-2"
+   - Right-click on project > Add Files to "Pinry Saver"
    - Select the `PinryShared` folder
    - Ensure both targets (main app and share extension) are checked
 

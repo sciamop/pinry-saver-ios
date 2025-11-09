@@ -8,7 +8,7 @@
 - `PinryShared/PinryUploader.swift` - Pinry API uploader with HEIC conversion
 
 ✅ **Main App Files:**
-- `pinry-saver-ios-2/ContentView.swift` - SwiftUI Settings screen with form validation
+- `PinrySaver/ContentView.swift` - SwiftUI Settings screen with form validation
 
 ✅ **Share Extension Files:**
 - `PinryShareExtension/ShareViewController.swift` - Complete share extension logic
@@ -22,17 +22,17 @@
 
 ### 1. Add Shared Files to Project
 
-1. Open `pinry-saver-ios-2.xcodeproj` in Xcode
-2. Right-click on the project navigator → "Add Files to 'pinry-saver-ios-2'"
+1. Open `PinrySaver.xcodeproj` in Xcode
+2. Right-click on the project navigator → "Add Files to 'Pinry Saver'"
 3. Select the `PinryShared` folder
 4. **Ensure both targets are checked:**
-   - ✅ pinry-saver-ios-2 (main app)
+   - ✅ Pinry Saver (main app)
    - ✅ PinryShareExtension (share extension)
 
 ### 2. Configure Bundle Identifiers
 
 **Main App Target:**
-1. Select project → pinry-saver-ios-2 target
+1. Select project → Pinry Saver target
 2. Go to "Signing & Capabilities"
 3. Change Bundle Identifier to: `com.example.pinrysaver`
 
@@ -58,7 +58,7 @@
 ### 5. Configure Deployment Target
 
 **Ensure iOS 14.0+ for both targets:**
-1. Select project → pinry-saver-ios-2 target
+1. Select project → Pinry Saver target
 2. Set "iOS Deployment Target" to 14.0
 3. Select PinryShareExtension target
 4. Set "iOS Deployment Target" to 14.0

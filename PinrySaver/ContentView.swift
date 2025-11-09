@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 // Custom color extension for Pinry magenta
 extension Color {
@@ -53,8 +54,20 @@ struct ImageGalleryView: View {
     @State private var errorMessage: String?
     @State private var scrollToTop = false
     @State private var selectedPinIndex: Int? = nil
-    @State private var thumbnailCache: [Int: Image] = [:]
+    @State private var thumbnailCache: [Int: UIImage] = [:]
     @State private var showGallery = false
+    @State private var prefetchedPages: [PrefetchedPage] = []
+    @State private var prefetchTasks: [Int: Task<Void, Never>] = [:]
+    @State private var thumbnailPrefetchTasks: [Int: Task<Void, Never>] = [:]
+    
+    private let pageSize = 20
+    private let desiredPrefetchBuffer = 2
+    
+    private struct PrefetchedPage {
+        let offset: Int
+        let pins: [PinryPinDetail]
+        let hasMore: Bool
+    }
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -80,6 +93,7 @@ struct ImageGalleryView: View {
                                 PinThumbnailView(
                                     pin: pin,
                                     isSelected: false,
+                                    cachedImage: thumbnailCache[pin.id],
                                         onImageLoaded: { image in
                                             thumbnailCache[pin.id] = image
                                         }
@@ -183,6 +197,11 @@ struct ImageGalleryView: View {
                         if hasMore && !isLoading {
                             loadMorePins()
                         }
+                    },
+                    onPageBoundary: { idx in
+                        if pageSize > 0 && ((idx + 1) % pageSize == 0) {
+                            prefetchNextOffsets()
+                        }
                     }
                 )
             }
@@ -197,6 +216,9 @@ struct ImageGalleryView: View {
                         showGallery = true
                     }
                 }
+            } else {
+                preloadThumbnails(for: pins)
+                prefetchNextOffsets()
             }
         }
     }
@@ -208,14 +230,17 @@ struct ImageGalleryView: View {
         errorMessage = nil
         
         Task {
-            let result = await PinryFetcher.shared.fetchPins(offset: 0, limit: 20)
+            let result = await PinryFetcher.shared.fetchPins(offset: 0, limit: pageSize)
             
             await MainActor.run {
                 isLoading = false
                 
                 if result.success {
+                    cancelPrefetch()
                     pins = result.pins
                     hasMore = result.hasMore
+                    preloadThumbnails(for: result.pins)
+                    prefetchNextOffsets()
                 } else {
                     errorMessage = result.error
                 }
@@ -224,12 +249,29 @@ struct ImageGalleryView: View {
     }
     
     private func loadMorePins() {
-        guard !isLoading && hasMore else { return }
+        if consumePrefetchedPage() {
+            return
+        }
+        
+        guard hasMore else { return }
+        
+        if let pendingTask = prefetchTasks[pins.count] {
+            Task {
+                _ = await pendingTask.value
+                await MainActor.run {
+                    loadMorePins()
+                }
+            }
+            return
+        }
+        
+        guard !isLoading else { return }
         
         isLoading = true
         
         Task {
-            let result = await PinryFetcher.shared.fetchPins(offset: pins.count, limit: 20)
+            let currentOffset = pins.count
+            let result = await PinryFetcher.shared.fetchPins(offset: currentOffset, limit: pageSize)
             
             await MainActor.run {
                 isLoading = false
@@ -237,6 +279,9 @@ struct ImageGalleryView: View {
                 if result.success {
                     pins.append(contentsOf: result.pins)
                     hasMore = result.hasMore
+                    errorMessage = nil
+                    preloadThumbnails(for: result.pins)
+                    prefetchNextOffsets()
                 } else {
                     errorMessage = result.error
                 }
@@ -249,13 +294,18 @@ struct ImageGalleryView: View {
         let currentCount = max(pins.count, 20)
         let result = await PinryFetcher.shared.fetchPins(offset: 0, limit: currentCount)
         
-        if result.success {
-            pins = result.pins
-            thumbnailCache.removeAll()
-            hasMore = result.hasMore
-            errorMessage = nil
-        } else {
-            errorMessage = result.error
+        await MainActor.run {
+            if result.success {
+                cancelPrefetch()
+                pins = result.pins
+                thumbnailCache.removeAll()
+                hasMore = result.hasMore
+                errorMessage = nil
+                preloadThumbnails(for: result.pins)
+                prefetchNextOffsets()
+            } else {
+                errorMessage = result.error
+            }
         }
     }
     
@@ -288,7 +338,7 @@ struct ImageGalleryView: View {
         var newPins: [PinryPinDetail] = []
         
         while true {
-            let result = await PinryFetcher.shared.fetchPins(offset: offset, limit: 20)
+            let result = await PinryFetcher.shared.fetchPins(offset: offset, limit: pageSize)
             
             guard result.success else { break }
             
@@ -300,7 +350,7 @@ struct ImageGalleryView: View {
             } else {
                 // Haven't found our current first yet, add all these pins
                 newPins.append(contentsOf: result.pins)
-                offset += 20
+                offset += pageSize
                 
                 // Safety limit: don't fetch more than 100 new pins
                 if newPins.count >= 100 {
@@ -311,8 +361,171 @@ struct ImageGalleryView: View {
         
         // Prepend new pins to the beginning
         if !newPins.isEmpty {
-            pins.insert(contentsOf: newPins, at: 0)
+            await MainActor.run {
+                cancelPrefetch()
+                pins.insert(contentsOf: newPins, at: 0)
+                preloadThumbnails(for: newPins)
+                prefetchNextOffsets()
+            }
         }
+    }
+    
+    @MainActor
+    private func preloadThumbnails(for pins: [PinryPinDetail]) {
+        for pin in pins {
+            guard thumbnailCache[pin.id] == nil else { continue }
+            startThumbnailPrefetch(for: pin)
+        }
+    }
+    
+    @MainActor
+    private func startThumbnailPrefetch(for pin: PinryPinDetail) {
+        guard thumbnailCache[pin.id] == nil else { return }
+        guard thumbnailPrefetchTasks[pin.id] == nil else { return }
+        guard let urlString = pin.image.thumbnail?.url,
+              let url = URL(string: urlString) else { return }
+        
+        let task = Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(from: url)
+                guard let httpResponse = response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                
+                guard let uiImage = UIImage(data: data) else {
+                    throw URLError(.cannotDecodeContentData)
+                }
+                
+                await MainActor.run {
+                    if Task.isCancelled {
+                        thumbnailPrefetchTasks[pin.id] = nil
+                        return
+                    }
+                    thumbnailCache[pin.id] = uiImage
+                    thumbnailPrefetchTasks[pin.id] = nil
+                }
+            } catch {
+                await MainActor.run {
+                    thumbnailPrefetchTasks[pin.id] = nil
+                }
+            }
+        }
+        
+        thumbnailPrefetchTasks[pin.id] = task
+    }
+    
+    @MainActor
+    private func cancelPrefetch() {
+        prefetchTasks.values.forEach { $0.cancel() }
+        prefetchTasks.removeAll()
+        prefetchedPages.removeAll()
+        thumbnailPrefetchTasks.values.forEach { $0.cancel() }
+        thumbnailPrefetchTasks.removeAll()
+    }
+    
+    @MainActor
+    private func prefetchNextOffsets() {
+        guard hasMore else { return }
+        
+        for step in 0..<desiredPrefetchBuffer {
+            let offset = pins.count + (step * pageSize)
+            
+            guard canPrefetchOffset(offset) else { break }
+            
+            if prefetchedPages.contains(where: { $0.offset == offset }) {
+                continue
+            }
+            
+            if prefetchTasks[offset] != nil {
+                continue
+            }
+            
+            schedulePrefetch(for: offset)
+        }
+    }
+    
+    @MainActor
+    private func canPrefetchOffset(_ offset: Int) -> Bool {
+        if offset < pins.count {
+            return false
+        }
+        
+        if offset == pins.count {
+            return hasMore
+        }
+        
+        let previousOffset = offset - pageSize
+        
+        if previousOffset < pins.count {
+            return hasMore
+        }
+        
+        if let previousPage = prefetchedPages.first(where: { $0.offset == previousOffset }) {
+            return previousPage.hasMore
+        }
+        
+        if prefetchTasks[previousOffset] != nil {
+            return true
+        }
+        
+        return false
+    }
+    
+    @MainActor
+    private func schedulePrefetch(for offset: Int) {
+        guard offset >= pins.count else { return }
+        
+        let task = Task {
+            let result = await PinryFetcher.shared.fetchPins(offset: offset, limit: pageSize)
+            
+            await MainActor.run {
+                defer { prefetchTasks[offset] = nil }
+                
+                guard !Task.isCancelled else { return }
+                
+                if result.success {
+                    guard !result.pins.isEmpty else {
+                        if offset == pins.count {
+                            hasMore = false
+                        }
+                        return
+                    }
+                    
+                    if !prefetchedPages.contains(where: { $0.offset == offset }) {
+                        prefetchedPages.append(
+                            PrefetchedPage(offset: offset, pins: result.pins, hasMore: result.hasMore)
+                        )
+                        prefetchedPages.sort { $0.offset < $1.offset }
+                        preloadThumbnails(for: result.pins)
+                    }
+                    
+                    if result.hasMore {
+                        prefetchNextOffsets()
+                    }
+                }
+            }
+        }
+        
+        prefetchTasks[offset] = task
+    }
+    
+    @MainActor
+    private func consumePrefetchedPage() -> Bool {
+        guard let index = prefetchedPages.firstIndex(where: { $0.offset == pins.count }) else {
+            return false
+        }
+        
+        let page = prefetchedPages.remove(at: index)
+        
+        pins.append(contentsOf: page.pins)
+        hasMore = page.hasMore
+        errorMessage = nil
+        
+        preloadThumbnails(for: page.pins)
+        
+        prefetchNextOffsets()
+        return true
     }
 }
 
@@ -432,9 +645,10 @@ struct MasonryGrid<Content: View>: View {
 struct FullscreenImageViewer: View {
     let allPins: [PinryPinDetail]
     @State var currentIndex: Int
-    let thumbnailCache: [Int: Image]
+    let thumbnailCache: [Int: UIImage]
     @Binding var isPresented: Bool
     let onNearEnd: () -> Void
+    let onPageBoundary: (Int) -> Void
     
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
@@ -545,6 +759,10 @@ struct FullscreenImageViewer: View {
             if newIndex >= allPins.count - 3 {
                 onNearEnd()
             }
+            onPageBoundary(newIndex)
+        }
+        .onAppear {
+            onPageBoundary(currentIndex)
         }
     }
 }
@@ -552,7 +770,7 @@ struct FullscreenImageViewer: View {
 // MARK: - Full Size Image View
 struct FullSizeImageView: View {
     let pin: PinryPinDetail
-    let cachedThumbnail: Image?
+    let cachedThumbnail: UIImage?
     @Binding var showTags: Bool
     let onDismissGesture: ((DragGesture.Value) -> Bool)?
     let onDismissEnd: (() -> Void)?
@@ -565,7 +783,7 @@ struct FullSizeImageView: View {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     
-    init(pin: PinryPinDetail, cachedThumbnail: Image?, showTags: Binding<Bool>, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
+    init(pin: PinryPinDetail, cachedThumbnail: UIImage?, showTags: Binding<Bool>, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
         self.pin = pin
         self.cachedThumbnail = cachedThumbnail
         self._showTags = showTags
@@ -579,7 +797,7 @@ struct FullSizeImageView: View {
             ZStack {
                 // Show cached thumbnail immediately - ZERO delay
                 if let thumbnail = cachedThumbnail {
-                    thumbnail
+                    Image(uiImage: thumbnail)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }
@@ -751,22 +969,25 @@ struct CachedAsyncImage: View {
 struct PinThumbnailView: View {
     let pin: PinryPinDetail
     let isSelected: Bool
-    let onImageLoaded: ((Image) -> Void)?
-    @State private var thumbnailImage: Image? = nil
+    let cachedImage: UIImage?
+    let onImageLoaded: ((UIImage) -> Void)?
+    @State private var localImage: UIImage? = nil
     @State private var isLoading = false
     @State private var loadFailed = false
     @State private var retryCount = 0
     
-    init(pin: PinryPinDetail, isSelected: Bool = false, onImageLoaded: ((Image) -> Void)? = nil) {
+    init(pin: PinryPinDetail, isSelected: Bool = false, cachedImage: UIImage? = nil, onImageLoaded: ((UIImage) -> Void)? = nil) {
         self.pin = pin
         self.isSelected = isSelected
+        self.cachedImage = cachedImage
         self.onImageLoaded = onImageLoaded
+        self._localImage = State(initialValue: cachedImage)
     }
     
     var body: some View {
         Group {
-            if let thumbImg = thumbnailImage {
-                thumbImg
+            if let image = localImage ?? cachedImage {
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else if let thumbnailUrl = pin.image.thumbnail?.url {
@@ -776,8 +997,11 @@ struct PinThumbnailView: View {
                         .fill(Color.gray.opacity(0.05))
                         .aspectRatio(thumbnailAspectRatio, contentMode: .fit)
                         .overlay(
-                            PinryLoadingView(size: 64, desaturated: true, animated: false)
-                                .rotationEffect(.degrees(pin.id % 2 == 0 ? 45 : -45))
+                            Image("PinryIcon")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(12)
+                                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 3)
                         )
                     
                     if loadFailed && retryCount >= 3 {
@@ -813,7 +1037,7 @@ struct PinThumbnailView: View {
     }
     
     private func loadThumbnail(url: String) {
-        guard thumbnailImage == nil && !isLoading else { return }
+        guard localImage == nil && cachedImage == nil && !isLoading else { return }
         guard let imageUrl = URL(string: url) else { return }
         
         isLoading = true
@@ -828,9 +1052,8 @@ struct PinThumbnailView: View {
                 
                 if httpResponse.statusCode == 200, let uiImage = UIImage(data: data) {
                     await MainActor.run {
-                        let image = Image(uiImage: uiImage)
-                        thumbnailImage = image
-                        onImageLoaded?(image)
+                        localImage = uiImage
+                        onImageLoaded?(uiImage)
                         isLoading = false
                         loadFailed = false
                     }
