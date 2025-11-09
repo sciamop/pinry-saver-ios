@@ -653,6 +653,7 @@ struct FullscreenImageViewer: View {
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
     @State private var showTags = false
+    @State private var controlsVisible = true
     
     var body: some View {
         GeometryReader { geometry in
@@ -680,6 +681,7 @@ struct FullscreenImageViewer: View {
                             pin: pinItem,
                             cachedThumbnail: thumbnailCache[pinItem.id],
                             showTags: $showTags,
+                            controlsVisible: $controlsVisible,
                             onDismissGesture: { translation in
                                 // Use shorter dimension for dismiss zone calculation
                                 let screenWidth = geometry.size.width
@@ -751,7 +753,8 @@ struct FullscreenImageViewer: View {
                     }
                     Spacer()
                 }
-                .opacity(backgroundOpacity)
+                .opacity(backgroundOpacity * (controlsVisible ? 1.0 : 0.0))
+                .animation(.easeInOut(duration: 0.2), value: controlsVisible)
             }
         }
         .onChange(of: currentIndex) { _, newIndex in
@@ -772,10 +775,13 @@ struct FullSizeImageView: View {
     let pin: PinryPinDetail
     let cachedThumbnail: UIImage?
     @Binding var showTags: Bool
+    @Binding var controlsVisible: Bool
     let onDismissGesture: ((DragGesture.Value) -> Bool)?
     let onDismissEnd: (() -> Void)?
     @State private var fullSizeImage: Image? = nil
+    @State private var fullSizeUIImage: UIImage? = nil
     @State private var isLoadingFull = false
+    @State private var fadeWorkItem: DispatchWorkItem? = nil
     
     // Zoom state
     @State private var scale: CGFloat = 1.0
@@ -783,10 +789,11 @@ struct FullSizeImageView: View {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     
-    init(pin: PinryPinDetail, cachedThumbnail: UIImage?, showTags: Binding<Bool>, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
+    init(pin: PinryPinDetail, cachedThumbnail: UIImage?, showTags: Binding<Bool>, controlsVisible: Binding<Bool>, onDismissGesture: ((DragGesture.Value) -> Bool)? = nil, onDismissEnd: (() -> Void)? = nil) {
         self.pin = pin
         self.cachedThumbnail = cachedThumbnail
         self._showTags = showTags
+        self._controlsVisible = controlsVisible
         self.onDismissGesture = onDismissGesture
         self.onDismissEnd = onDismissEnd
     }
@@ -816,9 +823,11 @@ struct FullSizeImageView: View {
             // Pinch to zoom
             MagnificationGesture()
                 .onChanged { value in
+                    recordInteraction()
                     scale = lastScale * value
                 }
                 .onEnded { value in
+                    recordInteraction()
                     lastScale = scale
                     // Limit zoom between 1x and 5x
                     let limitedScale = min(max(scale, 1.0), 5.0)
@@ -838,6 +847,7 @@ struct FullSizeImageView: View {
             // Pan when zoomed OR dismiss when not zoomed
             DragGesture(minimumDistance: 20)
                 .onChanged { value in
+                    recordInteraction()
                     if scale > 1.0 {
                         // Pan around when zoomed
                         offset = CGSize(
@@ -850,6 +860,7 @@ struct FullSizeImageView: View {
                     }
                 }
                 .onEnded { value in
+                    recordInteraction()
                     if scale > 1.0 {
                         lastOffset = offset
                     } else {
@@ -859,6 +870,7 @@ struct FullSizeImageView: View {
             )
             .onTapGesture(count: 2) {
                 // Double-tap to reset zoom
+                recordInteraction()
                 withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
                     scale = 1.0
                     lastScale = 1.0
@@ -869,22 +881,45 @@ struct FullSizeImageView: View {
             
             // Tag icon and display in upper left
             VStack(alignment: .leading, spacing: 8) {
-                Button(action: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        showTags.toggle()
+                HStack(spacing: 16) {
+                    Button(action: {
+                        recordInteraction()
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            showTags.toggle()
+                        }
+                    }) {
+                        let hasTags = pin.tags?.isEmpty == false
+                        let iconColor = hasTags ? Color.pinryMagenta : Color.white
+                        
+                        Image(systemName: showTags ? "tag.fill" : "tag")
+                            .font(.system(size: 24))
+                            .foregroundColor(iconColor)
+                            .contentShape(Rectangle())
+                            .padding(16)
+                            .background(Color.black.opacity(0.22))
+                            .clipShape(Circle())
                     }
-                }) {
-                    let hasTags = pin.tags?.isEmpty == false
-                    let iconColor = hasTags ? Color.pinryMagenta : Color.white
                     
-                    Image(systemName: showTags ? "tag.fill" : "tag")
-                        .font(.system(size: 24))
-                        .foregroundColor(iconColor)
-                        .padding(12)
-                        .background(Color.black.opacity(0.4))
-                        .clipShape(Circle())
-                        .shadow(color: .black.opacity(0.3), radius: 4)
+                    let shareableImage = fullSizeUIImage ?? cachedThumbnail
+                    
+                    Button(action: {
+                        recordInteraction()
+                        guard let image = shareableImage else { return }
+                        presentShareSheet(with: image)
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .contentShape(Rectangle())
+                            .padding(16)
+                            .background(Color.black.opacity(0.22))
+                            .clipShape(Circle())
+                    }
+                    .disabled(shareableImage == nil)
+                    .opacity(shareableImage == nil ? 0.35 : 1.0)
                 }
+                .opacity(controlsVisible ? 1.0 : 0.0)
+                .animation(.easeInOut(duration: 0.2), value: controlsVisible)
                 
                 // Tags display
                 if showTags, let tags = pin.tags, !tags.isEmpty {
@@ -911,12 +946,23 @@ struct FullSizeImageView: View {
             lastScale = 1.0
             offset = .zero
             lastOffset = .zero
+            fullSizeUIImage = nil
+            controlsVisible = true
+            recordInteraction()
             
             if fullSizeImage == nil && !isLoadingFull {
                 loadFullSizeImage()
             }
         }
+        .onDisappear {
+            fadeWorkItem?.cancel()
+            fadeWorkItem = nil
+            controlsVisible = true
+        }
         .id(pin.id) // Force fresh view for each image
+        .onTapGesture {
+            recordInteraction()
+        }
     }
     
     private func loadFullSizeImage() {
@@ -930,13 +976,76 @@ struct FullSizeImageView: View {
                     await MainActor.run {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             fullSizeImage = Image(uiImage: uiImage)
+                            fullSizeUIImage = uiImage
                         }
+                        recordInteraction()
                     }
                 }
             } catch {
                 print("Failed to load full-size image: \(error)")
             }
         }
+    }
+
+    private func presentShareSheet(with image: UIImage) {
+        guard let shareItem = ShareImageItem(image: image, filename: shareFilename()) else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            guard let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.activationState == .foregroundActive }),
+                  let rootVC = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController else {
+                shareItem.cleanup()
+                return
+            }
+            
+            let activityVC = UIActivityViewController(activityItems: [shareItem], applicationActivities: nil)
+            activityVC.completionWithItemsHandler = { _, _, _, _ in
+                shareItem.cleanup()
+            }
+            
+            if let popover = activityVC.popoverPresentationController {
+                popover.sourceView = rootVC.view
+                popover.sourceRect = CGRect(
+                    x: rootVC.view.bounds.midX,
+                    y: rootVC.view.bounds.midY,
+                    width: 0,
+                    height: 0
+                )
+                popover.permittedArrowDirections = []
+            }
+            
+            rootVC.present(activityVC, animated: true)
+        }
+    }
+    
+    private func shareFilename() -> String {
+        if let fullUrl = pin.image.fullSizeUrl,
+           let url = URL(string: fullUrl),
+           !url.lastPathComponent.isEmpty {
+            return url.lastPathComponent
+        }
+        
+        if let id = pin.image.id {
+            return "Pinry-\(id).jpg"
+        }
+        
+        return "Pinry-\(pin.id).jpg"
+    }
+    
+    private func recordInteraction() {
+        controlsVisible = true
+        fadeWorkItem?.cancel()
+        
+        let workItem = DispatchWorkItem {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                controlsVisible = false
+            }
+        }
+        fadeWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: workItem)
     }
 }
 
@@ -1000,8 +1109,9 @@ struct PinThumbnailView: View {
                             Image("PinryIcon")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .padding(12)
-                                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 3)
+                                .frame(width: 48, height: 48)
+                                .opacity(0.25)
+                                .rotationEffect(.degrees(pin.id % 2 == 0 ? 45 : -45))
                         )
                     
                     if loadFailed && retryCount >= 3 {
@@ -1025,6 +1135,11 @@ struct PinThumbnailView: View {
             }
         }
         .cornerRadius(8)
+        .onChange(of: cachedImage) { _, newValue in
+            if let newValue {
+                localImage = newValue
+            }
+        }
     }
     
     private var thumbnailAspectRatio: CGFloat {
@@ -1076,6 +1191,62 @@ struct PinThumbnailView: View {
                 }
             }
         }
+    }
+}
+
+private final class ShareImageItem: NSObject, UIActivityItemSource {
+    private let image: UIImage
+    private let fileURL: URL
+    
+    init?(image: UIImage, filename: String) {
+        self.image = image
+        
+        let sanitizedName: String = {
+            let trimmed = filename.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty { return "PinryImage.jpg" }
+            if trimmed.contains("/") || trimmed.contains(":") {
+                return trimmed.components(separatedBy: CharacterSet(charactersIn: "/:")).last ?? "PinryImage.jpg"
+            }
+            return trimmed
+        }()
+        
+        let hasExtension = !(sanitizedName as NSString).pathExtension.isEmpty
+        let fileExtension = hasExtension ? (sanitizedName as NSString).pathExtension : "jpg"
+        let baseName = (sanitizedName as NSString).deletingPathExtension
+        let uniqueName = "\(baseName.isEmpty ? "PinryImage" : baseName)-\(UUID().uuidString).\(fileExtension)"
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(uniqueName)
+        
+        guard let data = image.jpegData(compressionQuality: 0.95) ?? image.pngData() else {
+            return nil
+        }
+        
+        do {
+            try data.write(to: tempURL, options: .atomic)
+        } catch {
+            return nil
+        }
+        
+        self.fileURL = tempURL
+    }
+    
+    func cleanup() {
+        try? FileManager.default.removeItem(at: fileURL)
+    }
+    
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        fileURL
+    }
+    
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        fileURL
+    }
+    
+    func activityViewControllerThumbnailImage(_ activityViewController: UIActivityViewController, thumbnailSize: CGSize, forActivityType activityType: UIActivity.ActivityType?) -> UIImage? {
+        image
+    }
+    
+    func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+        fileURL.deletingPathExtension().lastPathComponent
     }
 }
 

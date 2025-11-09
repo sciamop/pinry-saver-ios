@@ -458,7 +458,9 @@ class ShareViewController: UIViewController {
                 // Prefer uploading the actual image when we have it, otherwise fall back to URL pin.
                 Task {
                     let tags = await self.classifySharedImageIfAvailable()
-                    let pin = self.createPreferredPin(for: url, tags: tags)
+                    let pin = await MainActor.run {
+                        self.createPreferredPin(for: url, tags: tags)
+                    }
                     continuation.resume(returning: pin)
                 }
             }
