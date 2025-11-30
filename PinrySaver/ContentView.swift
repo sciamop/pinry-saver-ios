@@ -24,7 +24,9 @@ struct ContentView: View {
                         SettingsView(isPresented: $showingSettings)
                     }
             } else {
-                SettingsView(isPresented: .constant(false))
+                SettingsView(isPresented: .constant(false), onSettingsSaved: {
+                    checkCredentials()
+                })
             }
         }
         .onAppear {
@@ -1253,6 +1255,7 @@ private final class ShareImageItem: NSObject, UIActivityItemSource {
 // MARK: - Settings View
 struct SettingsView: View {
     @Binding var isPresented: Bool
+    var onSettingsSaved: (() -> Void)? = nil
     @State private var pinryBaseURL: String = ""
     @State private var apiToken: String = ""
     @State private var defaultBoardID: String = ""
@@ -1445,6 +1448,9 @@ struct SettingsView: View {
                     
                     PinrySettings.save(settings)
                     PinrySettings.invalidateCache()
+                    
+                    // Notify parent that settings were saved
+                    onSettingsSaved?()
                     
                     // Show success state
                     validationSuccess = true
