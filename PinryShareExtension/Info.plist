@@ -22,7 +22,7 @@
 		<string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
 	</dict>
 	<key>CFBundleDisplayName</key>
-	<string>Pinry Saver</string>
+	<string>Pinstle</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

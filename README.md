@@ -1,6 +1,8 @@
-# PinrySaver iOS App
+# Pinstle iOS App
 
 A SwiftUI iOS app with share extension for saving images and URLs to Pinry instances.
+
+<img src="https://www.whistlehog.com/pinry-saver-ios/PinstleLogo@2x.png" width="200" alt="Pinstle Logo">
 
 ## Features
 
@@ -15,7 +17,7 @@ A SwiftUI iOS app with share extension for saving images and URLs to Pinry insta
 
 ## Screenshots
 
-<img src="https://pinry.whistlehog.com/media/2/a/2a541952ec40f7b97529a60b5c772faa/image.jpg" width="300" alt="PinrySaver Screenshot 1"> <img src="https://pinry.whistlehog.com/media/c/9/c93e8557739e6dca4b3feaa3776a8692/image.jpg" width="300" alt="PinrySaver Screenshot 2">
+<img src="https://pinry.whistlehog.com/media/2/a/2a541952ec40f7b97529a60b5c772faa/image.jpg" width="300" alt="Pinstle Screenshot 1"> <img src="https://pinry.whistlehog.com/media/c/9/c93e8557739e6dca4b3feaa3776a8692/image.jpg" width="300" alt="Pinstle Screenshot 2">
 
 ## Setting Up Your Pinry Server
 
@@ -109,7 +111,7 @@ PinrySaver/
 
 ### Initial Setup
 
-1. Launch the PinrySaver app
+1. Launch the Pinstle app
 2. Go to Settings tab
 3. Enter your Pinry configuration:
    - **Pinry Base URL**: Your Pinry instance URL (e.g., `https://your-pinry.com`)
@@ -121,7 +123,7 @@ PinrySaver/
 
 1. Open any app with images or URLs (Photos, Safari, etc.)
 2. Tap the share button
-3. Select "PinrySaver" from the share sheet
+3. Select "Pinstle" from the share sheet
 4. The extension will automatically upload the content to your configured Pinry instance
 
 ## API Requirements

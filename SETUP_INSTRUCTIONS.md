@@ -1,4 +1,4 @@
-# PinrySaver iOS Project - Complete Setup Guide
+# Pinstle iOS Project - Complete Setup Guide
 
 ## Files Created
 
@@ -23,10 +23,10 @@
 ### 1. Add Shared Files to Project
 
 1. Open `PinrySaver.xcodeproj` in Xcode
-2. Right-click on the project navigator → "Add Files to 'Pinry Saver'"
+2. Right-click on the project navigator → "Add Files to 'Pinstle'"
 3. Select the `PinryShared` folder
 4. **Ensure both targets are checked:**
-   - ✅ Pinry Saver (main app)
+   - ✅ Pinstle (main app)
    - ✅ PinryShareExtension (share extension)
 
 ### 2. Configure Bundle Identifiers
@@ -58,7 +58,7 @@
 ### 5. Configure Deployment Target
 
 **Ensure iOS 14.0+ for both targets:**
-1. Select project → Pinry Saver target
+1. Select project → Pinstle target
 2. Set "iOS Deployment Target" to 14.0
 3. Select PinryShareExtension target
 4. Set "iOS Deployment Target" to 14.0
@@ -84,8 +84,8 @@ Link the entitlements files I created:
 - [ ] Settings persist after app restart
 
 ### Share Extension Test:
-- [ ] Open Photos app → Share image → See "PinrySaver" option
-- [ ] Open Safari → Share URL → See "PinrySaver" option
+- [ ] Open Photos app → Share image → See "Pinstle" option
+- [ ] Open Safari → Share URL → See "Pinstle" option
 - [ ] Test upload flow with configured settings
 
 ## Code Features Implemented

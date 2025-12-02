@@ -173,9 +173,9 @@ class ShareViewController: UIViewController {
             imageView.backgroundColor = .secondarySystemBackground
             imageView.layer.borderWidth = 0
             
-            // Show Pinry P icon for URL/non-image shares
-            if let pinryIcon = UIImage(named: "PinryIcon") {
-                imageView.image = pinryIcon
+            // Show Pinstle icon for URL/non-image shares
+            if let pinstleIcon = UIImage(named: "PinryIcon") {
+                imageView.image = pinstleIcon
                 imageView.contentMode = .scaleAspectFit
             } else {
                 let iconConfig = UIImage.SymbolConfiguration(pointSize: 60, weight: .regular)
@@ -194,8 +194,8 @@ class ShareViewController: UIViewController {
             imageView.heightAnchor.constraint(equalToConstant: 200)
         ])
         
-        // Spinning P logo indicator
-        let spinner = PinrySpinnerView()
+        // Spinning Pinstle logo indicator
+        let spinner = PinstleSpinnerView()
         spinner.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(spinner)
         
@@ -591,7 +591,7 @@ class ShareViewController: UIViewController {
     
     private func updateUIForSuccess(_ message: String) {
         // Hide spinner - remove from layout
-        (activityIndicator as? PinrySpinnerView)?.stopAnimating()
+        (activityIndicator as? PinstleSpinnerView)?.stopAnimating()
         activityIndicator?.isHidden = true
         
         // Show success icon
@@ -619,7 +619,7 @@ class ShareViewController: UIViewController {
     
     private func updateUIForError(_ message: String) {
         // Hide spinner - remove from layout
-        (activityIndicator as? PinrySpinnerView)?.stopAnimating()
+        (activityIndicator as? PinstleSpinnerView)?.stopAnimating()
         activityIndicator?.isHidden = true
         
         // Show error icon
@@ -665,11 +665,10 @@ class ShareViewController: UIViewController {
     }
 }
 
-// MARK: - Pinry Spinner View
-class PinrySpinnerView: UIView {
+// MARK: - Pinstle Spinner View
+class PinstleSpinnerView: UIView {
     
-    private let shapeLayer = CAShapeLayer()
-    private var rotationAnchor: CGPoint = CGPoint(x: 0.5, y: 0.5)
+    private let imageView = UIImageView()
     private var isAnimating = false
     
     override init(frame: CGRect) {
@@ -685,72 +684,29 @@ class PinrySpinnerView: UIView {
     private func setupSpinner() {
         backgroundColor = .clear
         
-        // Create the P logo path
-        shapeLayer.fillColor = UIColor(red: 1.0, green: 0.26, blue: 1.0, alpha: 1.0).cgColor
-        shapeLayer.strokeColor = nil
-        layer.addSublayer(shapeLayer)
+        // Use the Pinstle icon image asset
+        if let iconImage = UIImage(named: "PinryIcon") {
+            imageView.image = iconImage
+            imageView.contentMode = .scaleAspectFit
+        }
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.widthAnchor.constraint(equalTo: widthAnchor),
+            imageView.heightAnchor.constraint(equalTo: heightAnchor)
+        ])
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        shapeLayer.bounds = CGRect(origin: .zero, size: bounds.size)
-        shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        shapeLayer.path = createPLogoPath().cgPath
-        shapeLayer.anchorPoint = rotationAnchor
-        shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         
         if !isAnimating {
             startAnimating()
         }
-    }
-    
-    private func createPLogoPath() -> UIBezierPath {
-        let size = min(bounds.width, bounds.height)
-        let lineWidth = size * 0.035  // Thinner strokes (~2.1pt at 60pt size)
-        let spacing = size * 0.04     // Slightly reduced spacing
-        
-        let path = UIBezierPath()
-        
-        // Create three parallel vertical stripes for the P stem
-        let stemX = size * 0.28
-        let stemTop = size * 0.12
-        let stemBottom = size * 0.88
-        
-        for i in 0..<3 {
-            let x = stemX + CGFloat(i) * (lineWidth + spacing)
-            let verticalLine = UIBezierPath(roundedRect: CGRect(x: x, y: stemTop, width: lineWidth, height: stemBottom - stemTop), cornerRadius: lineWidth / 2)
-            path.append(verticalLine)
-        }
-        
-        // Create three parallel curved stripes for the P bowl
-        let bowlCenterX = size * 0.60
-        let bowlCenterY = size * 0.33
-        let bowlRadius = size * 0.24
-        rotationAnchor = CGPoint(x: bowlCenterX / size, y: bowlCenterY / size)
-        
-        for i in 0..<3 {
-            let currentRadius = bowlRadius - CGFloat(i) * (lineWidth + spacing)
-            
-            // Create arc path
-            let arcPath = UIBezierPath()
-            arcPath.addArc(withCenter: CGPoint(x: bowlCenterX, y: bowlCenterY),
-                          radius: currentRadius,
-                          startAngle: -.pi / 2,
-                          endAngle: .pi / 2,
-                          clockwise: true)
-            
-            // Stroke it to create the filled shape
-            let strokedPath = CGPath(__byStroking: arcPath.cgPath,
-                                    transform: nil,
-                                    lineWidth: lineWidth,
-                                    lineCap: .round,
-                                    lineJoin: .round,
-                                    miterLimit: 0)!
-            
-            path.append(UIBezierPath(cgPath: strokedPath))
-        }
-        
-        return path
     }
     
     func startAnimating() {
@@ -760,12 +716,12 @@ class PinrySpinnerView: UIView {
         rotation.duration = 0.8
         rotation.repeatCount = .infinity
         rotation.timingFunction = CAMediaTimingFunction(name: .linear)
-        shapeLayer.add(rotation, forKey: "spin")
+        imageView.layer.add(rotation, forKey: "spin")
         isAnimating = true
     }
     
     func stopAnimating() {
-        shapeLayer.removeAnimation(forKey: "spin")
+        imageView.layer.removeAnimation(forKey: "spin")
         isAnimating = false
     }
 }

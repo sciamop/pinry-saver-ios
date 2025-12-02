@@ -6,9 +6,9 @@
 import SwiftUI
 import UIKit
 
-// Custom color extension for Pinry magenta
+// Custom color extension for Pinstle magenta
 extension Color {
-    static let pinryMagenta = Color(red: 1.0, green: 0.26, blue: 1.0) // #FF42FF
+    static let pinstleMagenta = Color(red: 1.0, green: 0.26, blue: 1.0) // #FF42FF
 }
 
 // MARK: - Main ContentView
@@ -149,7 +149,7 @@ struct ImageGalleryView: View {
             .animation(.easeInOut(duration: 0.3), value: showGallery)
             
             // Show custom loading screen - fades out when gallery appears
-            PinryLoadingView()
+            PinstleLoadingView()
                 .opacity(showGallery ? 0 : 1)
                 .animation(.easeInOut(duration: 0.3), value: showGallery)
                 .allowsHitTesting(!showGallery)
@@ -157,11 +157,11 @@ struct ImageGalleryView: View {
             
             // Floating UI elements - fixed at top of screen
             HStack {
-                // Pinry Logo (upper left) - scroll to top - no background
+                // Pinstle Logo (upper left) - scroll to top - no background
                 Button(action: {
                     scrollToTop.toggle()
                 }) {
-                    PinryLogo()
+                    PinstleLogo()
                         .frame(width: 44, height: 44)
                         .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 2)
                 }
@@ -531,8 +531,8 @@ struct ImageGalleryView: View {
     }
 }
 
-// MARK: - Pinry Loading View
-struct PinryLoadingView: View {
+// MARK: - Pinstle Loading View
+struct PinstleLoadingView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var yOffset: CGFloat = 0
     let size: CGFloat
@@ -562,10 +562,10 @@ struct PinryLoadingView: View {
                         ForEach(0..<3, id: \.self) { index in
                             Group {
                                 if desaturated {
-                                    PinryLogo()
+                                    PinstleLogo()
                                         .colorMultiply(colorScheme == .dark ? .white : .black)
                                 } else {
-                                    PinryLogo()
+                                    PinstleLogo()
                                 }
                             }
                             .frame(width: size, height: size)
@@ -576,10 +576,10 @@ struct PinryLoadingView: View {
                         // Static version (no motion blur)
                         Group {
                             if desaturated {
-                                PinryLogo()
+                                PinstleLogo()
                                     .colorMultiply(colorScheme == .dark ? .white : .black)
                             } else {
-                                PinryLogo()
+                                PinstleLogo()
                             }
                         }
                         .frame(width: size, height: size)
@@ -891,7 +891,7 @@ struct FullSizeImageView: View {
                         }
                     }) {
                         let hasTags = pin.tags?.isEmpty == false
-                        let iconColor = hasTags ? Color.pinryMagenta : Color.white
+                        let iconColor = hasTags ? Color.pinstleMagenta : Color.white
                         
                         Image(systemName: showTags ? "tag.fill" : "tag")
                             .font(.system(size: 24))
@@ -1031,10 +1031,10 @@ struct FullSizeImageView: View {
         }
         
         if let id = pin.image.id {
-            return "Pinry-\(id).jpg"
+            return "Pinstle-\(id).jpg"
         }
         
-        return "Pinry-\(pin.id).jpg"
+        return "Pinstle-\(pin.id).jpg"
     }
     
     private func recordInteraction() {
@@ -1205,9 +1205,9 @@ private final class ShareImageItem: NSObject, UIActivityItemSource {
         
         let sanitizedName: String = {
             let trimmed = filename.trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmed.isEmpty { return "PinryImage.jpg" }
+            if trimmed.isEmpty { return "PinstleImage.jpg" }
             if trimmed.contains("/") || trimmed.contains(":") {
-                return trimmed.components(separatedBy: CharacterSet(charactersIn: "/:")).last ?? "PinryImage.jpg"
+                return trimmed.components(separatedBy: CharacterSet(charactersIn: "/:")).last ?? "PinstleImage.jpg"
             }
             return trimmed
         }()
@@ -1215,7 +1215,7 @@ private final class ShareImageItem: NSObject, UIActivityItemSource {
         let hasExtension = !(sanitizedName as NSString).pathExtension.isEmpty
         let fileExtension = hasExtension ? (sanitizedName as NSString).pathExtension : "jpg"
         let baseName = (sanitizedName as NSString).deletingPathExtension
-        let uniqueName = "\(baseName.isEmpty ? "PinryImage" : baseName)-\(UUID().uuidString).\(fileExtension)"
+        let uniqueName = "\(baseName.isEmpty ? "PinstleImage" : baseName)-\(UUID().uuidString).\(fileExtension)"
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(uniqueName)
         
         guard let data = image.jpegData(compressionQuality: 0.95) ?? image.pngData() else {
@@ -1277,7 +1277,7 @@ struct SettingsView: View {
                         // Logo at top
                         HStack {
                             Spacer()
-                            PinryLogo()
+                            PinstleLogo()
                                 .frame(width: 80, height: 80)
                             Spacer()
                         }
@@ -1323,7 +1323,7 @@ struct SettingsView: View {
                                 .background(
                                     pinryBaseURL.isEmpty
                                         ? Color.gray.opacity(0.3)
-                                        : Color.pinryMagenta
+                                        : Color.pinstleMagenta
                                 )
                                 .cornerRadius(28)
                         }
@@ -1377,10 +1377,10 @@ struct SettingsView: View {
                             // Success state
                             Text("✓")
                                 .font(.system(size: 60, weight: .regular))
-                                .foregroundColor(.pinryMagenta)
+                                .foregroundColor(.pinstleMagenta)
                         } else {
                             // Loading state
-                            PinryLoadingView(size: 80, desaturated: false, animated: true)
+                            PinstleLoadingView(size: 80, desaturated: false, animated: true)
                                 .frame(width: 80, height: 80)
                         }
                         
@@ -1532,8 +1532,8 @@ struct CustomTextFieldStyle: TextFieldStyle {
     }
 }
 
-// Pinry Logo Component - Uses PNG asset
-struct PinryLogo: View {
+// Pinstle Logo Component - Uses PNG asset
+struct PinstleLogo: View {
     var body: some View {
         Image("PinryIcon")
             .resizable()
